@@ -1,15 +1,14 @@
 <template>
-  <section class="p-fluid">
-    <h1>Life</h1>
-    <p>This is the LIFE page.</p>
+  <section class="grid grid-1 gap-2 p2">
+    <SectionContact />
   </section>
 </template>
 
 <script setup>
 import { isDark } from '~/composables/usePageUi.js'
-isDark.value = false
+isDark.value = true
 
 definePageMeta({
-  pageTitle: 'Life'
+  pageTitle: 'Contact'
 })
 </script> 

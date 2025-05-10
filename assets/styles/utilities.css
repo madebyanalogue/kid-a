@@ -91,7 +91,12 @@
   justify-content: center;
   align-items: center;
 }
-
+.flex-bottom {
+  align-items: flex-end;
+}
+.fullheight {
+  height: 100%;
+}
 .padtopheader {
   padding-top: var(--header-height);
 }

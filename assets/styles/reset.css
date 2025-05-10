@@ -61,3 +61,6 @@ button, input, select, textarea {
 *::before, *::after {
   box-sizing: inherit;
 } 
+button {
+  cursor: pointer;
+}

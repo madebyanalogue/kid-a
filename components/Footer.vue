@@ -4,22 +4,22 @@
     <div class="wrapper">
 
 
-      <div class="grid grid-1 pad-2">
+      <div class="grid grid-1 gap-2">
 
         <!-- Row 1: 4 columns -->
-        <div class="grid">
+        <div class="grid h5">
           <div class="col-span-3"><Logo /></div>
           <div class="col-span-3">
-            <ul>
+            <ul class="circle--active circle--hover">
               <li v-for="item in mainMenu" :key="item.to">
-                <NuxtLink :to="item.to">{{ item.text }}</NuxtLink>
+                <NuxtLink :to="item.to" :class="{ active: route.path === item.to }">{{ item.text }}</NuxtLink>
               </li>
             </ul>
           </div>
           <div class="col-span-3">
-            <ul>
+            <ul class="circle--active circle--hover">
               <li v-for="item in footerMenu" :key="item.to">
-                <NuxtLink :to="item.to">{{ item.text }}</NuxtLink>
+                <NuxtLink :to="item.to" :class="{ active: route.path === item.to }">{{ item.text }}</NuxtLink>
               </li>
             </ul>
           </div>
@@ -33,14 +33,32 @@
         </div>
 
         <!-- Row 2: 1/4, 1/2, 1/4 -->
-        <div class="grid">
-          <div class="col-span-3"><Logo /></div>
-          <div class="col-span-6"><Logo /></div>
-          <div class="col-span-3"><Logo /></div>
+        <div class="grid h5">
+          <div class="col-span-3">
+            <div class="flex flex-column flex-bottom fullheight">
+              <img src="/logos/logo-11.png" alt="Logo" style="width:25%;min-width:70px;" />
+            </div>
+          </div>
+          
+          <div class="col-span-6">
+            <div class="flex flex-column flex-bottom fullheight">
+              <div class="grid grid-1 gap-1">
+                <SocialIcons />
+                <div class="">© {{ new Date().getFullYear() }} Kid-A All Rights Reserved.</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-span-3">
+            <div class="flex flex-column flex-bottom fullheight">
+              <img src="/logos/logo-12.png" alt="Logo" style="width:100%;max-width:360px;" />
+            </div>
+          </div>
+              
         </div>
 
         <!-- Row 3: 10 logos -->
-        <div class="flex justify-center logos-row">
+        <div class="flex justify-center logos-row py1">
           <img
             v-for="(logo, i) in logos"
             :key="i"
@@ -57,6 +75,9 @@
 </template>
 
 <script setup>
+import { mainMenu, footerMenu } from '~/composables/useMainMenu.js';
+import { useRoute } from 'vue-router';
+const route = useRoute();
 const logos = [
   '/logos/logo-01.png',
   '/logos/logo-02.png',

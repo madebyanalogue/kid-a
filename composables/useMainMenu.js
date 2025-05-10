@@ -22,7 +22,7 @@ export const footerMenu = [
 ]; 
 
 export const contactInfo = [
-  { label: "Name", value: "THE OVERLOOK HOTEL" },
+  { label: "Name", value: "“THE OVERLOOK HOTEL”" },
   { label: "Address", value: "10A CHARLECOTE MEWS,\nSTAPLE GARDENS,\nWINCHESTER,\nSO23 8SR" },
   { label: "Company Info", value: "COMPANY NUMBER 12171870\nVAT NUMBER 334295303" },
   { label: "Tel", value: "TEL. 01962 656 180" }

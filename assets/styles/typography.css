@@ -5,6 +5,7 @@
   --color-text: var(--black);
   --color-link: var(--black);
   --circle-font-size: var(--h5);
+  --body-font: 'DM Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 .dark {
@@ -16,17 +17,15 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&display=swap');
 
 body {
-  font-family: 'DM Sans', Arial, sans-serif;
-  font-size: 1rem;
-  line-height: 1.6;
+  font-family: var(--body-font);
+  line-height: 1.2;
   color: var(--color-text);
   background: var(--color-bg);
 }
 h1, h2, h3, h4, h5, h6 {
-  font-family: 'DM Sans', Arial, sans-serif;
-  font-weight: 700;
-  margin-bottom: 0.5em;
-  line-height: 1.1;
+  font-family: var(--body-font);
+  font-weight: 500;
+  margin-bottom: 0em;
 }
 
 
@@ -40,10 +39,8 @@ LARGE TITLES
 .h2     { line-height: 1.2; }
 .h3     { line-height: 1.0; }
 .h4     { line-height: 1.2; }
-.h5     { line-height: 1.2; }
+.h5     { line-height: 1.2; font-weight:500;}
 .h6     { line-height: 1.2; }
-.h7     { line-height: 1.2; }
-.h8     { line-height: 1.2; }
 body    { line-height: 1.2; }
 .rte    { line-height: 1.2; }
 
@@ -53,8 +50,6 @@ body    { line-height: 1.2; }
 .h4, .rte h4 { font-size: var(--h4); }
 .h5, .rte h5 { font-size: var(--h5); }
 .h6 { font-size: var(--h6); }
-.h7 { font-size: var(--h7); }
-.h8 { font-size: var(--h8); }
 body { font-size: var(--body); }
 .rte h6 { font-size: var(--h8); line-height: 1.4; }
 
@@ -67,11 +62,7 @@ body { font-size: var(--body); }
   --h4: calc((30 / (var(--unit-reference) / 100)) * var(--unit));
   --h5: calc((20 / (var(--unit-reference) / 100)) * var(--unit));
   --h6: calc((17 / (var(--unit-reference) / 100)) * var(--unit));
-  --h7: calc((20 / (var(--unit-reference) / 100)) * var(--unit));
-  --h8: calc((19 / (var(--unit-reference) / 100)) * var(--unit));
-  --h9: calc((16 / (var(--unit-reference) / 100)) * var(--unit));
-  --h10: calc((12 / (var(--unit-reference) / 100)) * var(--unit));
-  --body: calc((22 / (var(--unit-reference) / 100)) * var(--unit));
+  --body: calc((26 / (var(--unit-reference) / 100)) * var(--unit));
 }
 
 
@@ -89,7 +80,7 @@ body { font-size: var(--body); }
 
 @media all and (min-width:1600px) {
   :root {
-    --h5: 20px;
+    /*--h5: 20px;*/
   }
 }
 
@@ -103,6 +94,7 @@ body { font-size: var(--body); }
   font-size: var(--circle-font-size);
   text-transform: uppercase;
   font-weight: 500;
+  line-height: 1;
 }
 
 .circle {
@@ -111,4 +103,45 @@ body { font-size: var(--body); }
   border-radius: 50%;
   background: var(--color-text);
   display: inline-block;
+}
+
+.circle--active li a, 
+.circle--hover li a {
+  position:relative;
+}
+.circle--active li a:before, 
+.circle--hover li a:before {
+  content: '';
+  position: absolute;
+  height:calc(var(--circle-font-size) * 0.85);
+  width:calc(var(--circle-font-size) * 0.85);
+  background:currentColor;
+  border-radius:50%;
+  top:calc(var(--circle-font-size) * 0.225);
+  left:calc(var(--circle-font-size) * -1.45);
+  opacity:0;
+}
+.circle--active li a.active:before, 
+.circle--hover li a:hover:before {
+  opacity:1;
+}
+
+.h5 .circle--active li a:before, 
+.h5 .circle--hover li a:before {
+  --circle-font-size: var(--h5);
+}
+
+.circle {
+  width: calc(var(--circle-font-size) * 0.85);
+  height: calc(var(--circle-font-size) * 0.85);
+  border-radius: 50%;
+  background: var(--color-text);
+  display: inline-block;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+.transform-none {
+  text-transform: none;
 }

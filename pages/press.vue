@@ -11,10 +11,17 @@
 </template>
 
 <script setup>
+import { isDark } from '~/composables/usePageUi.js'
+isDark.value = false
+
 const posts = [
   { id: 1, title: 'First Press Post', summary: 'Summary of the first press post.' },
   { id: 2, title: 'Second Press Post', summary: 'Summary of the second press post.' },
 ];
+
+definePageMeta({
+  pageTitle: 'Press'
+})
 </script>
 
 <style scoped>

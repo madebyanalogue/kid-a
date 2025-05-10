@@ -14,6 +14,9 @@
 </template>
 
 <script setup>
+import { isDark } from '~/composables/usePageUi.js'
+isDark.value = false
+
 const playlists = [
   {
     id: 1,
@@ -37,6 +40,10 @@ const playlists = [
     ],
   },
 ];
+
+definePageMeta({
+  pageTitle: 'Playlist'
+})
 </script>
 
 <style scoped>

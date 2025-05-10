@@ -6,7 +6,13 @@
         <span class="page-title">{{ menuOpen ? 'Menu' : pageTitle }}</span>
       </div>
     </div>
-    <NuxtLink to="/" class="logo-center" :style="{ zIndex: menuOpen ? 1003 : 1, position: 'relative' }" @click="menuOpen ? closeMenu() : null">
+    <NuxtLink
+      v-if="!isHome || menuOpen"
+      to="/"
+      class="logo-center"
+      :style="{ zIndex: menuOpen ? 1003 : 1, position: 'relative' }"
+      @click="menuOpen ? closeMenu() : null"
+    >
       <Logo />
     </NuxtLink>
     <div class="header-right flex flex-row flex-center">
@@ -56,16 +62,7 @@ const toggleMenu = () => {
   nextTick(updateHeights);
 };
 const closeMenu = () => (menuOpen.value = false);
-const pageTitles = {
-  '/': 'Home',
-  '/about': 'Beats',
-  '/what': 'Rhymes',
-  '/life': 'Life',
-  '/press': 'Press',
-  '/playlists': 'Playlist',
-  '/eats': 'Eats',
-};
-const pageTitle = computed(() => pageTitles[route.path] || '');
+const pageTitle = computed(() => route.meta.pageTitle || '');
 const navStyle = computed(() => {
   resizeKey.value;
   const itemCount = navItems.length;
@@ -80,6 +77,7 @@ const navStyle = computed(() => {
     lineHeight: 1,
   };
 });
+const isHome = computed(() => route.path === '/');
 function handleResize() {
   updateHeights();
   resizeKey.value++;
@@ -94,18 +92,13 @@ onUnmounted(() => {
 watch(menuOpen, (open) => {
   if (open) nextTick(updateHeights);
 });
+watch(() => route.path, () => {
+  nextTick(updateHeights);
+});
 </script>
 
 <style scoped>
 
-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  z-index: 1000;
-  width: 100%;
-}
 
 .header-bar {
   justify-content: space-between;
