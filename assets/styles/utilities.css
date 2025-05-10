@@ -1,0 +1,41 @@
+/* Utility CSS */
+:root {
+  --unit: 16px;
+}
+
+@media (min-width: 768px) {
+  :root {
+    --unit: 20px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --unit: 1vw;
+  }
+}
+
+.flex {
+  display: flex;
+}
+.flex-col {
+  flex-direction: column;
+}
+.flex-row {
+  flex-direction: row;
+}
+.flex-center {
+  justify-content: center;
+  align-items: center;
+}
+.p-fluid {
+  padding: calc(var(--unit) * 1);
+}
+.px-fluid {
+  padding-left: calc(var(--unit) * 1);
+  padding-right: calc(var(--unit) * 1);
+}
+.py-fluid {
+  padding-top: calc(var(--unit) * 1);
+  padding-bottom: calc(var(--unit) * 1);
+} 
