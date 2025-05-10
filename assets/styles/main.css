@@ -1,0 +1,27 @@
+:root {
+  --logo-width: 100px;
+}
+
+.logo {
+  max-width: var(--logo-width);
+}
+.logo svg {
+ width: 100%;
+ display: inline-block;
+}
+.logo svg > * {
+  fill: currentColor;
+}
+
+
+#__nuxt {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column; 
+}
+
+main {
+  flex: 1 0 auto;
+  /* Optional: add padding or margin as needed */
+  padding-top: var(--header-height);
+}
