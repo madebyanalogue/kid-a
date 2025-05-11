@@ -1,21 +1,42 @@
 <template>
-  <section class="p-fluid">
-    <h1>Playlists</h1>
-    <div v-for="playlist in playlists" :key="playlist.id" class="playlist">
-      <h2>{{ playlist.name }}</h2>
-      <div v-for="person in playlist.people" :key="person.id" class="person">
-        <h3>{{ person.name }}</h3>
-        <ul>
-          <li v-for="section in person.sections" :key="section.id">{{ section.title }}</li>
-        </ul>
-      </div>
+  <SectionHero section="5"/>
+
+  <section>
+    <div class="wrapper">
+      <img src="/images/playlist-0.jpg" alt="Playlist 0" />
     </div>
   </section>
+  
+  <section>
+    <div class="wrapper"> 
+      <img src="/images/playlist-1.jpg" alt="Playlist 1" />
+    </div>
+  </section>
+  
+  <section>
+    <div class="wrapper">
+      <img src="/images/playlist-2.jpg" alt="Playlist 2" />
+    </div>
+  </section>
+  
+  <section>
+    <div class="wrapper">
+      <img src="/images/playlist-3.jpg" alt="Playlist 3" />
+    </div>
+  </section>
+  
+  <section>
+    <div class="wrapper">
+      <img src="/images/playlist-4.jpg" alt="Playlist 4" />
+    </div>
+  </section>
+
 </template>
 
 <script setup>
-import { isDark } from '~/composables/usePageUi.js'
+import { isDark, useHeaderPadding } from '~/composables/usePageUi.js'
 isDark.value = false
+useHeaderPadding.value = true
 
 const playlists = [
   {

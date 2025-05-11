@@ -54,7 +54,7 @@ body { font-size: var(--body); }
 .rte h6 { font-size: var(--h8); line-height: 1.4; }
 
 :root {
-  --unit: 12px;
+  --unit: 14px;
   --unit-reference: 1600;
   --h1: calc((42 / (var(--unit-reference) / 100)) * var(--unit));
   --h2: calc((40 / (var(--unit-reference) / 100)) * var(--unit));
@@ -103,6 +103,7 @@ body { font-size: var(--body); }
   border-radius: 50%;
   background: var(--color-text);
   display: inline-block;
+  aspect-ratio: 1 / 1;
 }
 
 .circle--active li a, 

@@ -1,10 +1,10 @@
 <template>
   <VisibleGrid />
   <Header />
-  <main>
+  <main :style="{ paddingTop: mainPaddingVar }">
     <NuxtPage />
   </main>
-  <Footer />
+  <Footer v-if="$route.name !== 'index'" />
 </template>
 
 <script setup>
@@ -13,6 +13,12 @@ import Footer from '~/components/Footer.vue';
 import VisibleGrid from '~/components/VisibleGrid.vue';
 import { useDarkMode } from '~/composables/useDarkMode.js';
 import { useFavicon } from '~/composables/useFavicon.js';
+import { useHeaderPadding } from '~/composables/usePageUi.js';
+import { computed } from 'vue';
+
+const mainPaddingVar = computed(() =>
+  useHeaderPadding.value ? 'var(--header-height)' : 'var(--pad-2)'
+);
 
 const { isDark } = useDarkMode();
 useFavicon(isDark);

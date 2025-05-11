@@ -5,9 +5,10 @@
 </template>
 
 <script setup>
-import { isDark } from '~/composables/usePageUi.js'
+import { isDark, useHeaderPadding } from '~/composables/usePageUi.js'
 // Set based on your logic or CMS data:
 isDark.value = true // or false
+useHeaderPadding.value = false
 
 definePageMeta({
   pageTitle: 'Home'

@@ -1,12 +1,11 @@
 <template>
-  <section class="grid grid-1 gap-2 p2">
-    <SectionContact />
-  </section>
+  <SectionContact />
 </template>
 
 <script setup>
-import { isDark } from '~/composables/usePageUi.js'
+import { isDark, useHeaderPadding } from '~/composables/usePageUi.js'
 isDark.value = true
+useHeaderPadding.value = true
 
 definePageMeta({
   pageTitle: 'Contact'

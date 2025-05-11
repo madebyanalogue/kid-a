@@ -4,7 +4,7 @@ export const mainMenu = [
   { text: 'LIFE', to: '/life' },
   { text: 'PRESS', to: '/press' },
   { text: 'PLAYLIST', to: '/playlists' },
-  { text: 'EATS', to: '/eats' },
+  { text: 'EATS', to: 'https://everyonesaddictedto.com/' },
 ];
 
 

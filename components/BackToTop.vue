@@ -2,10 +2,10 @@
   <div class="wrapper py2">
     <transition name="fade">
       <div v-if="showButton" class="back-to-top">
-        <button @click="scrollToTop">
-          <div class="circle--heading"><span class="circle"></span><span>Back to top</span></div>
-        </button>
-      </div>
+      <button @click="scrollToTop">
+        <div class="circle--heading"><span class="circle"></span><span>Back to top</span></div>
+      </button>
+    </div>
     </transition>
   </div>
 </template>

@@ -1,18 +1,18 @@
 <template>
-  <section class="p-fluid">
-    <h1>Press</h1>
-    <div class="posts">
-      <article v-for="post in posts" :key="post.id" class="post">
-        <h2>{{ post.title }}</h2>
-        <p>{{ post.summary }}</p>
-      </article>
+  <SectionHero section="4"/>
+
+  <section>
+    <div class="wrapper"> 
+      <img src="/images/press-2.jpg" alt="Press 0" />
     </div>
   </section>
+
 </template>
 
 <script setup>
-import { isDark } from '~/composables/usePageUi.js'
+import { isDark, useHeaderPadding } from '~/composables/usePageUi.js'
 isDark.value = false
+useHeaderPadding.value = true
 
 const posts = [
   { id: 1, title: 'First Press Post', summary: 'Summary of the first press post.' },
