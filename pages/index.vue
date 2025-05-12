@@ -1,6 +1,6 @@
 <template>
   <section class="p2">
-    <Home />
+    <SectionHomeScroll />
   </section>
 </template>
 

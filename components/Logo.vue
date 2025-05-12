@@ -22,15 +22,15 @@
 @keyframes blink {
   0% { opacity: 1; }
   1% { opacity: 0; }
-  3% { opacity: 0; }
-  4% { opacity: 1; }
+  5% { opacity: 0; }
+  6% { opacity: 1; }
   100% { opacity: 1; }
 } 
 @keyframes wink {
   0% { opacity: 0; }
   1% { opacity: 1; }
-  3% { opacity: 1; }
-  4% { opacity: 0; }
+  5% { opacity: 1; }
+  6% { opacity: 0; }
   100% { opacity: 0; }
 }
 </style>

@@ -4,7 +4,7 @@
   <main :style="{ paddingTop: mainPaddingVar }">
     <NuxtPage />
   </main>
-  <Footer />
+  <Footer v-if="$route.name !== 'index'" />
 </template>
 
 <script setup>
