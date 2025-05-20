@@ -1,5 +1,5 @@
 <template>
-  <header ref="headerRef" :class="['header-bar', 'flex', 'flex-row', 'flex-center', 'px2', 'py2', { dark: menuDark }]">
+  <header ref="headerRef" :class="['header-bar', 'flex', 'flex-row', 'flex-center', 'px2', 'py2', { dark: menuDark, 'menu-active': menuOpen }]">
     <div class="header-left">
       <div class="circle--heading" :style="{ zIndex: menuOpen ? 1004 : 1, position: 'relative' }">
         <span class="circle"></span>
@@ -261,5 +261,9 @@ function onMenuLeave() {
 }
 li {
   transition: opacity 0.3s;
+}
+.header-bar.menu-active {
+  background: var(--black);
+  color: var(--white);
 }
 </style> 

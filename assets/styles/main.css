@@ -21,6 +21,13 @@ header {
   right: 0;
   z-index: 9000;
   width: 100%;
+  pointer-events: none;
+}
+header.menu-active {
+  pointer-events: all;
+}
+header a, header button {
+  pointer-events: auto;
 }
 
 main {
@@ -51,4 +58,19 @@ main {
   flex: 1 0 auto;
   /* Optional: add padding or margin as needed */
   padding-top: var(--header-height);
+}
+
+
+
+.roundal {
+  animation: rotate 10s linear infinite;
+}
+
+@keyframes rotate {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

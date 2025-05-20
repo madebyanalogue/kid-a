@@ -22,13 +22,44 @@ body {
   color: var(--color-text);
   background: var(--color-bg);
 }
-h1, h2, h3, h4, h5, h6 {
+h1, h2, h3, h4, h5, h6, body {
   font-family: var(--body-font);
   font-weight: 500;
   margin-bottom: 0em;
 }
 
+.rte > *:not(:last-child) {
+  margin-bottom: var(--pad-1);
+}
 
+.button {
+  border: 1px solid var(--color-text);
+  border-radius: 0;
+  text-decoration: none;
+  text-align: center;
+  min-width: calc(var(--pad-1) * 8);
+  overflow: hidden;
+  position: relative;
+  display: inline-block;
+}
+
+.button span {
+  display: inline-block;
+  padding: calc(var(--pad-1) * .5) calc(var(--pad-1) * 2);
+  transition: transform 0.3s ease;
+}
+.button span:last-child {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--color-text);
+  color: var(--color-bg);
+}
+.button:hover span {
+  transform: translateY(100%);
+}
 
 /* ---------------------------------
 LARGE TITLES
@@ -54,12 +85,12 @@ body { font-size: var(--body); }
 .rte h6 { font-size: var(--h8); line-height: 1.4; }
 
 :root {
-  --unit: 14px;
+  --unit: 9px;
   --unit-reference: 1600;
-  --h1: calc((42 / (var(--unit-reference) / 100)) * var(--unit));
-  --h2: calc((40 / (var(--unit-reference) / 100)) * var(--unit));
+  --h1: calc((48 / (var(--unit-reference) / 100)) * var(--unit));
+  --h2: calc((42 / (var(--unit-reference) / 100)) * var(--unit));
   --h3: calc((34 / (var(--unit-reference) / 100)) * var(--unit));
-  --h4: calc((30 / (var(--unit-reference) / 100)) * var(--unit));
+  --h4: calc((26 / (var(--unit-reference) / 100)) * var(--unit));
   --h5: calc((20 / (var(--unit-reference) / 100)) * var(--unit));
   --h6: calc((17 / (var(--unit-reference) / 100)) * var(--unit));
   --body: calc((26 / (var(--unit-reference) / 100)) * var(--unit));
@@ -84,13 +115,17 @@ body { font-size: var(--body); }
   }
 }
 
-
-
+.medium {
+  font-weight: 500;
+}
+.text-center {
+  text-align: center;
+}
 
 .circle--heading {
   display: flex;
   align-items: center;
-  gap: calc(var(--circle-font-size) * 0.85);
+  gap: calc(var(--h5) * 0.85);
   font-size: var(--circle-font-size);
   text-transform: uppercase;
   font-weight: 500;
@@ -145,4 +180,8 @@ body { font-size: var(--body); }
 }
 .transform-none {
   text-transform: none;
+}
+
+.h2 {
+  --circle-font-size: var(--h3);
 }

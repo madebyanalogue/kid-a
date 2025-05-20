@@ -28,7 +28,7 @@
             </ul>
           </div>
           <div class="">
-            <div class="grid grid-1">
+            <div class="rte uppercase">
               <div v-for="item in contactInfo" :key="item.label">
                 <div v-html="item.value.replace(/\n/g, '<br>')"></div>
               </div>

@@ -17,13 +17,12 @@ export const footerMenu = [
   { text: 'CONFLICT MINERALS', to: '/conflict-minerals' },
   { text: 'PRIVACY', to: '/privacy' },
   { text: 'COOKIES', to: '/cookies' },
-  { text: 'TERMS', to: '/terms' },
   { text: 'CONTACT', to: '/contact' },
 ]; 
 
 export const contactInfo = [
-  { label: "Name", value: "“THE OVERLOOK HOTEL”" },
-  { label: "Address", value: "10A CHARLECOTE MEWS,\nSTAPLE GARDENS,\nWINCHESTER,\nSO23 8SR" },
+  { label: "Address", value: "“THE OVERLOOK HOTEL”\n10A CHARLECOTE MEWS,\nSTAPLE GARDENS,\nWINCHESTER,\nSO23 8SR" },
   { label: "Company Info", value: "COMPANY NUMBER 12171870\nVAT NUMBER 334295303" },
-  { label: "Tel", value: "TEL. 01962 656 180" }
+  { label: "Tel", value: "TEL. 01962 656 180\nEmail. <a href='mailto:hello@kid-a.co.uk'>hello@kid-a.co.uk</a>" },
+  { label: "Email", value: "" }
 ]; 
