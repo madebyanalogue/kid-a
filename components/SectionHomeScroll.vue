@@ -7,13 +7,13 @@
         <div class="media">
           <a href="/about" class="media-link">
             <img src="" alt="">
-            <h3 class="media-title">About</h3>
+            <h3 class="media-title">Beats</h3>
           </a>
         </div>
         <div class="media">
           <a href="/what" class="media-link">
             <img src="" alt="">
-            <h3 class="media-title">What</h3>
+            <h3 class="media-title">Rhymes</h3>
           </a>
         </div>
         <div class="media">
@@ -41,7 +41,7 @@
           </a>
         </div>
         <div class="media">
-          <a href="#" class="media-link">
+          <a href="https://www.ninjatune.net/home" class="media-link" target="_blank">
             <img src="" alt="">
             <h3 class="media-title">Surprise Me</h3>
           </a>
