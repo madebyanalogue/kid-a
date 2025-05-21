@@ -29,7 +29,7 @@
           </a>
         </div>
         <div class="media">
-          <a href="/life" class="media-link">
+          <a href="/sustainability" class="media-link">
             <img src="" alt="">
             <h3 class="media-title">Life</h3>
           </a>
@@ -47,7 +47,7 @@
           </a>
         </div>
         <div class="media">
-          <a href="#" class="media-link">
+          <a href="https://everyonesaddictedto.com/" class="media-link" target="_blank">
             <img src="" alt="">
             <h3 class="media-title">EATS</h3>
           </a>

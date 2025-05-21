@@ -6,14 +6,14 @@
     <div class="container">
       <div class="media">
         <a href="/about" class="media-link">
-          <img src="@/public/images/home-1.jpg" alt="About">
-          <h3 class="media-title">About</h3>
+          <img src="@/public/images/home-1.jpg" alt="Beats">
+          <h3 class="media-title">Beats</h3>
         </a>
       </div>
       <div class="media">
         <a href="/what" class="media-link">
-          <img src="@/public/images/home-2.jpg" alt="What">
-          <h3 class="media-title">What</h3>
+          <img src="@/public/images/home-2.jpg" alt="Rhymes">
+          <h3 class="media-title">Rhymes</h3>
         </a>
       </div>
       <div class="media">
@@ -29,7 +29,7 @@
         </a>
       </div>
       <div class="media">
-        <a href="/life" class="media-link">
+        <a href="/sustainability" class="media-link">
           <img src="@/public/images/home-5.png" alt="Life">
           <h3 class="media-title">Life</h3>
         </a>
@@ -47,7 +47,7 @@
         </a>
       </div>
       <div class="media">
-        <a href="#" class="media-link">
+        <a href="/eats" class="media-link">
           <img src="@/public/images/home-8.jpg" alt="EATS">
           <h3 class="media-title">EATS</h3>
         </a>

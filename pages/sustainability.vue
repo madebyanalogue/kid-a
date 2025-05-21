@@ -86,6 +86,6 @@ isDark.value = false
 useHeaderPadding.value = true
 
 definePageMeta({
-  pageTitle: 'Life'
+  pageTitle: 'Life (Sustainability)'
 })
 </script> 

@@ -1,15 +1,11 @@
 <template>
-  <section class="p-fluid">
-    <h1>Eats</h1>
-    <p>This is the EATS page.</p>
-  </section>
+  <div></div>
 </template>
 
 <script setup>
-import { isDark } from '~/composables/usePageUi.js'
-isDark.value = false
+import { onMounted } from 'vue'
 
-definePageMeta({
-  pageTitle: 'Eats'
+onMounted(() => {
+  window.location.href = 'https://google.com'
 })
 </script> 

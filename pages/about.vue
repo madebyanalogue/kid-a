@@ -56,7 +56,7 @@
           <NuxtImg src="/images/about-3.jpg" alt="About 4" />
         </div>
         <div class="col-span-12 col-span-6-md p3-md">
-          <div class="h4 rte"><p>In March 2025 we were listing in the top 30 (30th to be precise!) fastest growing companies in Europe according to the FT and Statista. This is a pretty fantastic and shows that you can grow fast and do the right things.</p></div>
+          <div class="h4 rte"><p>In March 2025 we were listing in the top 35 (32nd to be precise!) fastest growing companies in Europe according to the FT and Statista. This is a pretty fantastic and shows that you can grow fast and do the right things.</p></div>
         </div>
       </div>
     </div>

@@ -1,10 +1,11 @@
 export const mainMenu = [
   { text: 'BEATS (ABOUT)', to: '/about' },
   { text: 'RHYMES (WHAT)', to: '/what' },
-  { text: 'LIFE', to: '/life' },
+  { text: 'LIFE (SUSTAINABILITY)', to: '/sustainability' },
   { text: 'PRESS', to: '/press' },
   { text: 'PLAYLIST', to: '/playlists' },
   { text: 'EATS', to: 'https://everyonesaddictedto.com/' },
+  { text: 'CONTACT', to: '/contact' },
 ];
 
 
@@ -17,7 +18,6 @@ export const footerMenu = [
   { text: 'CONFLICT MINERALS', to: '/conflict-minerals' },
   { text: 'PRIVACY', to: '/privacy' },
   { text: 'COOKIES', to: '/cookies' },
-  { text: 'CONTACT', to: '/contact' },
 ]; 
 
 export const contactInfo = [

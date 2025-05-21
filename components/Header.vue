@@ -1,5 +1,5 @@
 <template>
-  <header ref="headerRef" :class="['header-bar', 'flex', 'flex-row', 'flex-center', 'px2', 'py2', { dark: menuDark, 'menu-active': menuOpen }]">
+  <header ref="headerRef" :class="['header-bar', 'flex', 'flex-row', 'flex-center', 'px2', 'py2', { dark: menuDark, 'menu-active': menuOpen, 'header-hidden': !isHeaderVisible }]">
     <div class="header-left">
       <div class="circle--heading" :style="{ zIndex: menuOpen ? 1004 : 1, position: 'relative' }">
         <span class="circle"></span>
@@ -61,8 +61,10 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { useHeaderScroll } from '~/composables/useHeaderScroll';
 import Logo from '~/components/Logo.vue';
 import { mainMenu } from '~/composables/useMainMenu.js';
+
 const route = useRoute();
 const navItems = mainMenu;
 const menuOpen = ref(false);
@@ -73,6 +75,8 @@ const headerHeight = ref(0);
 const menuHeight = ref(0);
 const resizeKey = ref(0);
 let darkTimeout = null;
+
+const { isHeaderVisible } = useHeaderScroll(menuOpen)
 
 const updateHeights = () => {
   if (headerRef.value) {
@@ -91,7 +95,7 @@ const toggleMenu = () => {
     menuOpen.value = true;
     menuBgVisible.value = true;
     menuDark.value = true;
-    showMenuItems.value = true; // ensure items are visible
+    showMenuItems.value = true;
     nextTick(updateHeights);
   } else {
     closeMenu();
@@ -164,12 +168,22 @@ function onMenuLeave() {
 
 <style scoped>
 .header-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  transition: transform 0.3s ease, background 0.3s, color 0.3s;
+  background: transparent;
   justify-content: space-between;
   align-items: start;
-  transition: background 0.3s, color 0.3s;
 }
 .header-bar.dark {
   color: var(--color-text, #fff);
+  background: transparent;
+}
+.header-bar.header-hidden {
+  transform: translateY(-100%);
 }
 .header-left, .header-right {
   min-width: 0;
@@ -263,7 +277,7 @@ li {
   transition: opacity 0.3s;
 }
 .header-bar.menu-active {
-  background: var(--black);
+  background: transparent;
   color: var(--white);
 }
 </style> 
