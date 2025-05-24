@@ -107,10 +107,11 @@
         paused: true
     })
   
+    // First timeline for z-position movement
     tl.to(medias, {
         z: 0,
         ease: "none",
-        duration: 8,
+        duration: 12,
         stagger: {
             each: 1,
             repeat: -1,
@@ -119,26 +120,39 @@
             }
         }
     })
-    tl.fromTo(medias, {
-        opacity: 0,
-        filter: "blur(20px)"
-    }, {
-        opacity: 1,
-        filter: "blur(0px)",
-        ease: "power2.in",
-        duration: 0.6,
+  
+    // Second timeline for opacity and blur
+    tl.to(medias, {
+        keyframes: [
+            {
+                opacity: 0,
+                filter: "blur(20px)",
+                duration: 0,
+                ease: "none"
+            },
+            {
+                opacity: 1,
+                filter: "blur(0px)",
+                duration: 0.6,
+                ease: "power2.in"
+            },
+            {
+                filter: "blur(0px)",
+                duration: 10.8,
+                ease: "none"
+            },
+            {
+                filter: "blur(20px)",
+                opacity: 0,
+                duration: 0.6,
+                ease: "power2.out"
+            }
+        ],
         stagger: {
             each: 1,
-            repeat: -1,
-            repeatDelay: 7.4,
-            onRepeat() {
-                this.targets()[0].style.opacity = "0"
-                this.targets()[0].style.filter = "blur(20px)"
-            }
+            repeat: -1
         }
-    }, '<')
-  
-    
+    }, '<') // Run in parallel with the z-position animation
   
     gsap.ticker.add(tick)
     window.addEventListener("wheel", handleWheel, {passive: true});
@@ -207,9 +221,9 @@
       tl.time(incr) // time() : go to a specific time of a timeline
   }
   
-  </script>
+</script>
   
-  <style scoped>
+<style scoped>
   
   .home--logo {
       position: absolute;

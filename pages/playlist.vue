@@ -23,7 +23,7 @@
   
   <SectionPlaylist name="Andy"/>
 
-  <SectionPlaylist name="Tomsy"/>
+  <SectionPlaylist name="Ollie"/>
 
   <!-- NESTED -->
   <section>

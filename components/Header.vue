@@ -113,12 +113,12 @@ function onMenuItemsAfterLeave() {
       menuDark.value = false;
     }
     darkTimeout = null;
-  }, 300);
+  }, 0);
 }
 function onMenuAfterLeave() {
   setTimeout(() => {
     menuDark.value = false;
-  }, 700); // increased delay for further dark mode fade-out
+  }, 0); // increased delay for further dark mode fade-out
 }
 const pageTitle = computed(() => route.meta.pageTitle || '');
 const navStyle = computed(() => {
@@ -244,7 +244,7 @@ function onMenuLeave() {
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: background 0.3s ease 1s, color 0.3s;
+  transition: background 0.3s ease .3s, color 0.3s;
   /* top and height set dynamically */
 }
 .menu-fade-slide-enter-active, .menu-fade-slide-leave-active {
