@@ -1,6 +1,6 @@
 <template>
-    <transition v-if="showButton" name="fade">
-      <div class="wrapper py2">
+    <transition name="fade">
+      <div v-if="showButton" class="wrapper py2">
         <div class="back-to-top">
           <button @click="scrollToTop">
             <div class="circle--heading"><span class="circle"></span><span>Back to top</span></div>
@@ -22,31 +22,43 @@ function scrollToTop() {
 function checkVisibility() {
   const pageHeight = document.body.scrollHeight
   const viewportHeight = window.innerHeight
-  const scrollY = window.scrollY || window.pageYOffset
-
-  // Show if scrolled down more than 1 viewport height
-  showButton.value = scrollY > viewportHeight
+  showButton.value = pageHeight > 1.5 * viewportHeight
 }
 
 onMounted(() => {
-  window.addEventListener('scroll', checkVisibility)
   window.addEventListener('resize', checkVisibility)
   checkVisibility() // Initial check
 })
 onUnmounted(() => {
-  window.removeEventListener('scroll', checkVisibility)
   window.removeEventListener('resize', checkVisibility)
 })
 </script>
 
 <style scoped>
-.fade-enter-active, .fade-leave-active {
-  transition: opacity 0.5s;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
 }
-.fade-enter-from, .fade-leave-to {
+
+.fade-enter-from,
+.fade-leave-to {
   opacity: 0;
 }
-.fade-enter-to, .fade-leave-from {
+
+.fade-enter-to,
+.fade-leave-from {
   opacity: 1;
+}
+
+.back-to-top {
+  display: block;
+}
+
+.back-to-top button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  color: inherit;
 }
 </style> 

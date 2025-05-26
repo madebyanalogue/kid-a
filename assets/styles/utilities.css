@@ -4,7 +4,7 @@
   --unit-reference: 1600;
   --max-width: 100vw;
 
-  --grid-gap: calc(var(--unit) * 2.5);
+  --grid-gap: calc(var(--unit) * 1.5);
 
   --pad-1: calc(var(--unit) * 1);
   --pad-2: calc(var(--unit) * 2);
@@ -24,6 +24,8 @@
   :root {
     --unit: 20px;
   }
+
+  --grid-gap: calc(var(--unit) * 2.5);
 }
 
 @media (min-width: 1024px) {
@@ -495,4 +497,10 @@ img {
 }
 .space-y-4 > *:not(:last-child) {
   margin-bottom: calc(var(--pad-1) * 1.5);
+}
+
+
+
+body.page-in header {
+  transition: background-color 0.3s ease-in-out !important;
 }

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <pre v-if="isDev" style="display: none">{{ JSON.stringify({ pageData, error }, null, 2) }}</pre>
+    <pre v-if="isDev" style="display: none">{{ JSON.stringify({ pageData, error, slug: slug.value }, null, 2) }}</pre>
     <template v-if="error">
       <div class="wrapper py6">
         <h1>Error</h1>
@@ -13,39 +13,35 @@
     </template>
     <template v-else>
       <div class="wrapper py6">
-        <h1>{{ pageData?.title || 'Home' }}</h1>
+        <h1>{{ pageData?.title || 'Page' }}</h1>
         <p>This page is being prepared. Please check back soon!</p>
         <p v-if="isDev">Debug: No sections found</p>
       </div>
     </template>
   </div>
-</template>
+</template> 
 
 <script setup>
-import { useAsyncData } from '#app'
-import { useNuxtApp } from '#app'
-import { createError } from '#app'
-import { watch } from 'vue'
-import { useRuntimeConfig } from '#app'
-import { computed } from 'vue'
-import { useRoute } from 'vue-router'
-import { usePageSettings } from '~/composables/usePageSettings'
-
-const { $sanity } = useNuxtApp()
-const config = useRuntimeConfig()
 const route = useRoute()
+const config = useRuntimeConfig()
 
-// Use the same data fetching approach as [...slug].vue
+// Get the full path as the slug
+const slug = computed(() => route.params.slug?.join('/') || '')
+
+// Use a more unique key that includes the full path
 const { data: pageData, error } = await useAsyncData(
-  () => `page-${route.path.replace(/^\//, '') || 'index'}`, // Use the same key format as usePageSettings
+  `page-${route.fullPath}`,
   async () => {
     try {
-      console.log('Fetching home page data...');
+      console.log('Fetching page data for:', {
+        path: route.fullPath,
+        slug: slug.value
+      });
       
       const result = await $fetch('/api/sanity', {
         params: {
           type: 'page',
-          identifier: 'index',
+          identifier: slug.value,
           identifierType: 'slug'
         }
       });
@@ -64,13 +60,14 @@ const { data: pageData, error } = await useAsyncData(
       if (!result || Object.keys(result).length === 0) {
         throw createError({
           statusCode: 404,
-          message: 'Home page not found'
+          message: `Page not found: ${slug.value}`
         })
       }
 
       return result
     } catch (err) {
-      console.error('[Page] Error fetching home page:', {
+      console.error('[Page] Error fetching page:', {
+        slug: slug.value,
         error: err.message,
         statusCode: err.statusCode
       })
@@ -78,9 +75,7 @@ const { data: pageData, error } = await useAsyncData(
     }
   },
   {
-    watch: [() => route.path],
-    immediate: true,
-    server: true
+    watch: [() => route.fullPath]
   }
 )
 
@@ -88,7 +83,7 @@ const { data: pageData, error } = await useAsyncData(
 watch(() => pageData.value, (newData) => {
   if (newData) {
     useHead({
-      title: newData.title || 'Home'
+      title: newData.title || route.path.split('/').pop()
     })
   }
 }, { immediate: true })
@@ -106,7 +101,7 @@ watch(() => error.value, (error) => {
 
 // Page meta
 useHead(() => {
-  const title = pageData.value?.title || 'Home';
+  const title = pageData.value?.title || 'Page Not Found';
   console.log('[Page] Setting head title:', title);
   return { title };
 })

@@ -17,6 +17,11 @@
         <Logo />
       </div>
     </NuxtLink>
+    <div v-else class="logo-center" :style="{ zIndex: 1, position: 'relative' }">
+      <div class="logo">
+        <Logo />
+      </div>
+    </div>
     <div class="header-right flex flex-row flex-center">
       <button class="hamburger" @click="toggleMenu" aria-label="Open menu">
         <span :class="{ open: menuOpen }"></span>
@@ -33,23 +38,54 @@
         <transition name="menu-items-fade" @after-leave="onMenuItemsAfterLeave">
           <ul
             v-if="showMenuItems"
-            class="flex flex-col flex-center gap-1 fullscreen-menu"
+            class="flex flex-col flex-center fullscreen-menu"
             :style="{ paddingBottom: navStyle.fontSize }"
           >
             <li
               v-for="item in navItems"
               :key="item.text"
             >
-              <template v-if="item.to.startsWith('/')">
-                <NuxtLink :to="item.to" @click.native="closeMenu" :style="navStyle">
-                  <MenuSvg :item="item.text" />
+              <template v-if="item.to?.page && item.to.page.slug?.current">
+                <NuxtLink
+                  :to="`/${item.to.page.slug.current}`"
+                  @click.native="closeMenu"
+                  :style="navStyle"
+                  class="menu-link"
+                >
+                  <span class="menu-text">{{ item.text }}</span>
+                  <div class="menu-image-wrapper">
+                    <template v-if="item.image?.asset?.url">
+                      <NuxtImg :src="item.image.asset.url" :alt="item.text" />
+                    </template>
+                    <template v-else-if="item.image?.asset?._ref">
+                      <NuxtImg :src="$urlFor(item.image).url()" :alt="item.text" />
+                    </template>
+                  </div>
                 </NuxtLink>
               </template>
-              <template v-else>
-                <a :href="item.to" target="_blank" rel="noopener" @click="closeMenu" :style="navStyle">
-                  <MenuSvg :item="item.text" />
+              <template v-else-if="item.to?.url">
+                <a
+                  :href="item.to.url"
+                  target="_blank"
+                  rel="noopener"
+                  @click="closeMenu"
+                  :style="navStyle"
+                  class="menu-link"
+                >
+                  <span class="menu-text">{{ item.text }}</span>
+                  <div class="menu-image-wrapper">
+                    <template v-if="item.image?.asset?.url">
+                      <NuxtImg :src="item.image.asset.url" :alt="item.text" />
+                    </template>
+                    <template v-else-if="item.image?.asset?._ref">
+                      <NuxtImg :src="$urlFor(item.image).url()" :alt="item.text" />
+                    </template>
+                  </div>
                 </a>
               </template>
+            </li>
+            <li v-if="!navItems.length || navItems.every(item => !(item.to?.page && item.to.page.slug?.current) && !item.to?.url)" style="color: #fff; opacity: 0.7; font-size: 16px; text-align: center;">
+              No menu items found or items are missing required fields.
             </li>
           </ul>
         </transition>
@@ -60,13 +96,24 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
-import { useRoute } from 'vue-router';
+import { useRoute } from '#app';
 import { useHeaderScroll } from '~/composables/useHeaderScroll';
 import Logo from '~/components/Logo.vue';
-import { mainMenu } from '~/composables/useMainMenu.js';
+import { NuxtImg } from '#components'
+import imageUrlBuilder from '@sanity/image-url'
+import { useMenu } from '~/composables/useMenu';
+
+// Sanity image URL builder
+const builder = imageUrlBuilder({ projectId: '8n513ygd', dataset: 'production' })
+const $urlFor = (source) => builder.image(source)
+
+let darkTimeout = null;
+
+// Fetch main menu from Sanity (same as Footer)
+const { mainMenu } = useMenu();
 
 const route = useRoute();
-const navItems = mainMenu;
+const navItems = computed(() => mainMenu?.value?.items || []);
 const menuOpen = ref(false);
 const menuDark = ref(false);
 const menuBgVisible = ref(false);
@@ -74,14 +121,45 @@ const headerRef = ref(null);
 const headerHeight = ref(0);
 const menuHeight = ref(0);
 const resizeKey = ref(0);
-let darkTimeout = null;
 
 const { isHeaderVisible } = useHeaderScroll(menuOpen)
+
+// Simple computed property for page title
+const pageTitle = computed(() => {
+  // First check route meta (for older pages)
+  if (route.meta.pageTitle) {
+    return route.meta.pageTitle;
+  }
+  
+  // For newer pages, try to get the title from the current path
+  const path = route.path;
+  if (path && path !== '/') {
+    // Convert path to title case (e.g., '/conflict-minerals' -> 'Conflict Minerals')
+    const title = path
+      .split('/')
+      .filter(Boolean)
+      .map(word => word.split('-').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' '))
+      .join(' ');
+    return title;
+  }
+  
+  // Default to 'Home' for the root path
+  if (path === '/') {
+    return 'Home';
+  }
+  
+  return '';
+});
 
 const updateHeights = () => {
   if (headerRef.value) {
     headerHeight.value = headerRef.value.offsetHeight;
-    menuHeight.value = window.innerHeight - headerHeight.value;
+    menuHeight.value = Math.max(0, window.innerHeight - headerHeight.value);
+    console.log('Heights updated:', {
+      headerHeight: headerHeight.value,
+      menuHeight: menuHeight.value,
+      windowHeight: window.innerHeight
+    });
     document.body.style.setProperty('--header-height', `${headerHeight.value}px`);
   }
 };
@@ -120,20 +198,32 @@ function onMenuAfterLeave() {
     menuDark.value = false;
   }, 0); // increased delay for further dark mode fade-out
 }
-const pageTitle = computed(() => route.meta.pageTitle || '');
 const navStyle = computed(() => {
   resizeKey.value;
-  const itemCount = navItems.length;
+  const itemCount = navItems.value?.length || 0;
   let fontSize;
+  
+  console.log('Debug values:', {
+    windowWidth: window.innerWidth,
+    menuHeight: menuHeight.value,
+    itemCount,
+    navItems: navItems.value
+  });
+
   if (window.innerWidth < 1024) {
     fontSize = '10vw';
   } else {
-    fontSize = `${Math.max(24, Math.floor(menuHeight.value / (itemCount * 1.2)))}px`;
+    // Ensure menuHeight has a value, default to window height if not set
+    const height = menuHeight.value || window.innerHeight;
+    fontSize = `${Math.max(24, Math.floor(height / (itemCount * 1.2)))}px`;
   }
-  return {
+  
+  const style = {
     fontSize,
     lineHeight: 1,
   };
+  console.log('navStyle computed:', style);
+  return style;
 });
 const isHome = computed(() => route.path === '/');
 function handleResize() {
@@ -143,9 +233,25 @@ function handleResize() {
 onMounted(() => {
   window.addEventListener('resize', handleResize);
   nextTick(updateHeights);
-});
-onUnmounted(() => {
-  window.removeEventListener('resize', handleResize);
+
+  // Watch for title changes
+  const observer = new MutationObserver((mutations) => {
+    mutations.forEach((mutation) => {
+      if (mutation.type === 'childList' && mutation.target.tagName === 'TITLE') {
+        console.log('[Header] Title changed to:', document.title);
+      }
+    });
+  });
+
+  const titleElement = document.querySelector('title');
+  if (titleElement) {
+    observer.observe(titleElement, { childList: true });
+  }
+
+  onUnmounted(() => {
+    window.removeEventListener('resize', handleResize);
+    observer.disconnect();
+  });
 });
 watch(menuOpen, (open) => {
   if (open) nextTick(updateHeights);
@@ -263,6 +369,10 @@ function onMenuLeave() {
   height: 100%;
   justify-content: center;
   align-items: center;
+  gap:0px;
+}
+.fullscreen-menu li {
+  width: 100%;
 }
 .menu-items-fade-enter-active, .menu-items-fade-leave-active {
   transition: opacity 0.3s;
@@ -279,5 +389,52 @@ li {
 .header-bar.menu-active {
   background: transparent;
   color: var(--white);
+}
+
+
+.menu-svg {
+  width: 100%;
+}
+
+.menu-svg img {
+  width: 100%;
+  height: auto;
+}
+
+/* Replacing the previous CSS rule for .header-bar.no-transform-transition */
+.header-bar.no-transform-transition {
+  transition: none !important;
+  transition: background 0.3s, color 0.3s !important;
+}
+
+.menu-link {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-decoration: none;
+}
+
+.menu-text {
+  visibility: hidden;
+  display: block;
+  white-space: nowrap;
+}
+
+.menu-image-wrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.menu-image-wrapper img {
+  width: 100%;
+  height: 80%;
+  object-fit: contain;
 }
 </style> 
