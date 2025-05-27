@@ -1,56 +1,58 @@
 <template>
-  <section class="home--container">
-    <div class="home--logo">
-      <div class="logo"><Logo /></div>
-    </div>
-    <div class="container" v-if="hasItems">
-      <div 
-        v-for="(item, index) in section.homeScrollContent.items" 
-        :key="item._key"
-        class="media"
-      >
-        <NuxtLink 
-          v-if="item.link && item.link.page && item.link.page.slug && item.link.page.slug.current"
-          :to="`/${item.link.page.slug.current}`"
-          class="media-link"
+  <section class="home-scroll-section">
+    <div class="home--container">
+      <div class="home--logo">
+        <div class="logo"><Logo /></div>
+      </div>
+      <div class="container" v-if="hasItems">
+        <div 
+          v-for="(item, index) in section.homeScrollContent.items" 
+          :key="item._key"
+          class="media"
         >
-          <NuxtImg
-            :src="getImageUrl(item.image)"
-            :alt="item.title"
-            loading="lazy"
-          />
-          <h3 class="media-title">{{ item.title }}</h3>
-        </NuxtLink>
-        <a 
-          v-else-if="item.link && item.link.url"
-          :href="item.link.url"
-          class="media-link"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <NuxtImg
-            :src="getImageUrl(item.image)"
-            :alt="item.title"
-            loading="lazy"
-          />
-          <h3 class="media-title">{{ item.title }}</h3>
-        </a>
-        <div v-else>
-          <p class="error">Missing link for item: {{ item.title }}</p>
+          <NuxtLink 
+            v-if="item.link && item.link.page && item.link.page.slug && item.link.page.slug.current"
+            :to="`/${item.link.page.slug.current}`"
+            class="media-link"
+          >
+            <NuxtImg
+              :src="getImageUrl(item.image)"
+              :alt="item.title"
+              loading="lazy"
+            />
+            <h3 class="media-title">{{ item.title }}</h3>
+          </NuxtLink>
+          <a 
+            v-else-if="item.link && item.link.url"
+            :href="item.link.url"
+            class="media-link"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <NuxtImg
+              :src="getImageUrl(item.image)"
+              :alt="item.title"
+              loading="lazy"
+            />
+            <h3 class="media-title">{{ item.title }}</h3>
+          </a>
+          <div v-else>
+            <p class="error">Missing link for item: {{ item.title }}</p>
+          </div>
         </div>
       </div>
-    </div>
-    <div v-else class="wrapper py6">
-      <p class="error">Home Scroll section is missing <b>homeScrollContent</b> or <b>items</b>.<br>
-        <span>Raw section data:</span>
-        <pre style="font-size:12px;max-width:100vw;overflow:auto;">{{ JSON.stringify(section, null, 2) }}</pre>
-      </p>
+      <div v-else class="wrapper py6">
+        <p class="error">Home Scroll section is missing <b>homeScrollContent</b> or <b>items</b>.<br>
+          <span>Raw section data:</span>
+          <pre style="font-size:12px;max-width:100vw;overflow:auto;">{{ JSON.stringify(section, null, 2) }}</pre>
+        </p>
+      </div>
     </div>
   </section>
 </template>
 
 <script setup>
-import { onMounted, ref, computed } from 'vue'
+import { onMounted, onUnmounted, ref, computed } from 'vue'
 import gsap from 'gsap';
 import { useSanityImage } from '~/composables/useSanityImage'
 
@@ -85,6 +87,7 @@ onMounted(() => {
     return;
   }
   document.body.classList.add('no-smooth')
+  document.body.classList.add('has-home-scroll')
 
   const root = document.querySelector('.home--container')
   const container = root.querySelector('.container')
@@ -173,6 +176,11 @@ onMounted(() => {
   })
 })
 
+onUnmounted(() => {
+  document.body.classList.remove('has-home-scroll')
+  document.body.classList.remove('no-smooth')
+})
+
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
@@ -224,101 +232,116 @@ function tick(time, dt) {
 </script>
 
 <style>
-main {
-  min-height:unset;
+body.has-home-scroll main {
+  min-height: unset !important;
+  padding-top: 0 !important;
+}
+
+body.has-home-scroll .back-to-top {
+  display: none !important;
 }
 </style>
 
 <style scoped>
-  
-  .home--logo {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 100;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      pointer-events: none;
-  }
-  
-  .home--container {
-      height: 100vh;
-      perspective: 100vw;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 100;
-  }
-  .home--container .container {
-      height: 100%;
-      transform-style: preserve-3d;
-  }
-  
-  .home--container .media {
-      width: 24%;
-      height: auto;
-      position: absolute;
-      transform: translateZ(-300vw);
-  }
+.home-scroll-section {
+  /* Styles for the section itself */
+}
 
-  .home--container .media-link {
-      text-decoration: none;
-      color: inherit;
-      display: block;
-  }
-  
+/* When this section is present, these styles will affect the parent elements */
+:global(.home-scroll-section ~ main) {
+  min-height: unset;
+  padding-top: 0 !important;
+}
+
+:global(.home-scroll-section ~ .back-to-top) {
+  display: none;
+}
+
+.home--logo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 100;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+}
+
+.home--container {
+  height: 100vh;
+  perspective: 100vw;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 100;
+}
+.home--container .container {
+  height: 100%;
+  transform-style: preserve-3d;
+}
+
+.home--container .media {
+  width: 24%;
+  height: auto;
+  position: absolute;
+  transform: translateZ(-300vw);
+}
+
+.home--container .media-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.home--container .media-title {
+  margin-top: calc(var(--unit) * 1);
+  font-size: calc(var(--unit) * 2);
+  text-align: center;
+  color: #fff;
+  font-weight: 500;
+  text-transform: uppercase;
+}
+
+.home--container .media img {
+  width: 100%;
+  height: auto;
+  display: block;
+  box-shadow: 1px 1px 30px rgba(0, 0, 0, 0.08);
+  transition: transform 0.6s ease;
+  transform-origin: bottom;
+}
+
+@media (min-width: 1023px) {
   .home--container .media-title {
-      margin-top: calc(var(--unit) * 1);
-      font-size: calc(var(--unit) * 2);
-      text-align: center;
-      color: #fff;
-      font-weight: 500;
-      text-transform: uppercase;
+    margin-top: 15px;
+    font-size: 30px;
   }
-  
-  .home--container .media img {
-      width: 100%;
-      height: auto;
-      display: block;
-      box-shadow: 1px 1px 30px rgba(0, 0, 0, 0.08);
-      transition: transform 0.6s ease;
-      transform-origin: bottom;
+  .home--container .media {
+    width: 280px;
   }
+}
 
+.home--container .media-link:hover img {
+  transform: scale(1.05);
+}
 
-  @media (min-width: 1023px) {
-    .home--container .media-title {
-      margin-top: 15px;
-      font-size: 30px;
-    }
-    .home--container .media {
-      width: 280px;
-    }
+.home--container .preload-medias img {
+  width: 1px;
+  height: 1px;
+  top: 0;
+  left: 0;
+  position: absolute;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@media (max-width: 768px) {
+  .home--container .media {
+    width: 40%;
   }
-  
-  
-  .home--container .media-link:hover img {
-      transform: scale(1.05);
-  }
-  
-  .home--container .preload-medias img {
-      width: 1px;
-      height: 1px;
-      top: 0;
-      left: 0;
-      position: absolute;
-      visibility: hidden;
-      pointer-events: none;
-  }
-  
-  
-  @media (max-width: 768px) {
-      .home--container .media {
-          width: 40%;
-      }
-  }
-  </style> 
+}
+</style> 

@@ -10,7 +10,9 @@
         <div class="grid grid-1 grid-sm-2 grid-md-4 h5">
           <div class="">
             <div class="logo">
-              <Logo />
+              <NuxtLink to="/">
+                <Logo />
+              </NuxtLink>
             </div>
           </div>
           <div class="">
