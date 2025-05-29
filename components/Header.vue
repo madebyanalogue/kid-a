@@ -182,6 +182,10 @@ const toggleMenu = () => {
 const closeMenu = () => {
   if (!menuOpen.value) return; // prevent double-close
   showMenuItems.value = false;
+  // Force scroll to top when menu is closed
+  if (process.client) {
+    window.scrollTo({ top: 0, behavior: 'instant' })
+  }
 };
 function onMenuItemsAfterLeave() {
   darkTimeout = setTimeout(() => {

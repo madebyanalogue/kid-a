@@ -31,11 +31,15 @@ import { useFavicon } from '~/composables/useFavicon.js';
 import { usePageSettings } from '~/composables/usePageSettings';
 import { computed, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router'
-import { useHead } from '#app'
+import { useHead, useRouter } from '#app'
 
 // Initialize page settings first
 const { isDark, page, useHeaderPadding } = usePageSettings();
 const route = useRoute();
+const router = useRouter();
+
+// Configure router to always scroll to top
+router.options.scrollBehavior = () => ({ top: 0 })
 
 // Add class to body when on home page
 watch(() => route.path, (path) => {

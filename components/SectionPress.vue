@@ -16,9 +16,15 @@
                 class="mb2 square"
               />
               <div class="h4">{{ post.title }}</div>
-              <button class="with-circle">
-                <div class="circle--heading"><span class="circle"></span><span>More</span></div>
-              </button>
+              <a 
+                  v-if="post.pdf?.asset?.url" 
+                  :href="post.pdf.asset.url" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  class="with-circle"
+                >
+                  <div class="circle--heading"><span class="circle"></span><span>More</span></div>
+                </a>
             </div>
           </div>
         </div>

@@ -432,6 +432,13 @@ export default defineEventHandler(async (event) => {
             url,
             metadata { dimensions }
           }
+        },
+        pdf {
+          asset-> {
+            _id,
+            url,
+            metadata { dimensions }
+          }
         }
       }`)
       return result
