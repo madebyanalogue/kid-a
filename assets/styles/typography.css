@@ -1,7 +1,19 @@
 @font-face {
   font-family: 'DM Sans';
+  src: url('/fonts/DMSans-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'DM Sans';
   src: url('/fonts/DMSans-Medium.ttf') format('truetype');
   font-weight: 500;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'DM Sans';
+  src: url('/fonts/DMSans-Bold.ttf') format('truetype');
+  font-weight: 700;
   font-style: normal;
 }
 
@@ -190,4 +202,12 @@ body { font-size: var(--body); }
 
 .h2 {
   --circle-font-size: var(--h3);
+}
+
+
+.sanity-blocks {
+  font-weight: 400;
+}
+.sanity-blocks strong, .sanity-blocks b {
+  font-weight: 700;
 }

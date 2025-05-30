@@ -10,6 +10,15 @@
             <div v-if="section?.basicContent?.content" class="content-wrapper">
               <SanityBlocks :blocks="section.basicContent.content" />
             </div>
+            <a 
+              v-if="section?.basicContent?.pdf?.asset?.url" 
+              :href="section.basicContent.pdf.asset.url" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="with-circle mt2"
+            >
+              <div class="circle--heading"><span class="circle"></span><span>Download PDF</span></div>
+            </a>
           </div>
         </div>
       </div>
