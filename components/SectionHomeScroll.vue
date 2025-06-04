@@ -242,7 +242,6 @@ body.has-home-scroll .back-to-top {
 
 <style scoped>
 .home-scroll-section {
-  /* Styles for the section itself */
 }
 
 /* When this section is present, these styles will affect the parent elements */
@@ -275,6 +274,7 @@ body.has-home-scroll .back-to-top {
   left: 0;
   width: 100%;
   z-index: 100;
+  transform: translateZ(300vw);
 }
 .home--container .container {
   height: 100%;
@@ -286,7 +286,7 @@ body.has-home-scroll .back-to-top {
   width: 24%;
   height: auto;
   position: absolute;
-  /* transform: translateZ(-300vw); */
+  transform: translateZ(-300vw);
   z-index: 2;
 }
 
