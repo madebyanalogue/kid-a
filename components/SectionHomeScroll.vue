@@ -1,9 +1,7 @@
 <template>
   <section class="home-scroll-section">
     <div class="home--container">
-      <div class="home--logo">
-        <div class="logo"><Logo /></div>
-      </div>
+      <div class="logo home--logo"><Logo /></div>
       <div class="container" v-if="hasItems">
         <div 
           v-for="(item, index) in section.homeScrollContent.items" 
@@ -227,6 +225,8 @@ function tick(time, dt) {
     incr += deltaObject.value.delta / 600 + dt / 800
     tl.time(incr) // time() : go to a specific time of a timeline
 }
+
+console.log('v2');
 </script>
 
 <style>
@@ -257,10 +257,9 @@ body.has-home-scroll .back-to-top {
 
 .home--logo {
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   z-index: 1;
   display: flex;
   justify-content: center;
