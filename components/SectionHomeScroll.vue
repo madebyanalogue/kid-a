@@ -286,7 +286,7 @@ body.has-home-scroll .back-to-top {
   width: 24%;
   height: auto;
   position: absolute;
-  transform: translateZ(-300vw);
+  /* transform: translateZ(-300vw); */
   z-index: 2;
 }
 
@@ -348,8 +348,8 @@ body.has-home-scroll .back-to-top {
   }
   
   .home--container .media-link {
-    z-index: 2;
-    pointer-events: auto;
+    z-index: 9999;
+    pointer-events: all;
   }
 }
 </style> 
