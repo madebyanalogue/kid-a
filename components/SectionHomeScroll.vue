@@ -48,7 +48,7 @@
 </template>
 
 <script setup>
-import { onMounted, onUnmounted, ref, computed } from 'vue'
+import { onMounted, onUnmounted, ref, computed, watch } from 'vue'
 import gsap from 'gsap';
 import { useSanityImage } from '~/composables/useSanityImage'
 
@@ -77,24 +77,39 @@ const mediaArray = ref([])
 let currentCycle = 0
 let trajectoryAngles = [0, 45, 90, 135, 180, 225, 270, 315]
 
+const isMobile = ref(false);
+
+function handleResize() {
+  if (typeof window !== 'undefined') {
+    isMobile.value = window.innerWidth < 1024;
+  }
+}
+
 onMounted(() => {
+  handleResize();
+  if (typeof window !== 'undefined') {
+    window.addEventListener('resize', handleResize);
+  }
+
   if (!hasItems.value) {
     console.warn('HomeScroll: Missing or empty items', props.section)
     return;
   }
-  document.body.classList.add('no-smooth')
-  document.body.classList.add('has-home-scroll')
+  if (typeof document !== 'undefined') {
+    document.body.classList.add('no-smooth')
+    document.body.classList.add('has-home-scroll')
+  }
 
-  const root = document.querySelector('.home--container')
-  const container = root.querySelector('.container')
+  const root = typeof document !== 'undefined' ? document.querySelector('.home--container') : null;
+  const container = root ? root.querySelector('.container') : null;
 
   // Build media array from Sanity images
   mediaArray.value = props.section.homeScrollContent.items.map(item => 
     getImageUrl(item.image)
   )
 
-  const medias = root.querySelectorAll('.media')
-  const mediasImg = root.querySelectorAll('.media img')
+  const medias = root ? root.querySelectorAll('.media') : [];
+  const mediasImg = root ? root.querySelectorAll('.media img') : [];
 
   // Set initial images
   mediasImg.forEach((img, index) => {
@@ -103,8 +118,8 @@ onMounted(() => {
 
   // QUICK TOS
   deltaTo = gsap.quickTo(deltaObject.value, 'delta', { duration: 2, ease: "power1" })
-  const rotY = gsap.quickTo(container, "rotationY", {duration: 0.5, ease: 'power1'})
-  const rotX = gsap.quickTo(container, "rotationX", {duration: 0.5, ease: 'power1'})
+  const rotY = container ? gsap.quickTo(container, "rotationY", {duration: 0.5, ease: 'power1'}) : () => {};
+  const rotX = container ? gsap.quickTo(container, "rotationX", {duration: 0.5, ease: 'power1'}) : () => {};
 
   medias.forEach(media => {
       updateMedia(media)
@@ -114,75 +129,103 @@ onMounted(() => {
       paused: true
   })
 
-  // First timeline for z-position movement
-  tl.to(medias, {
-      z: 0,
-      ease: "none",
-      duration: 12,
-      stagger: {
-          each: 1,
-          repeat: -1,
-          onRepeat() {
-              updateMedia(this.targets()[0])
-          }
-      }
-  })
+  if (!isMobile.value) {
+    // First timeline for z-position movement
+    tl.to(medias, {
+        z: 0,
+        ease: "none",
+        duration: 12,
+        stagger: {
+            each: 1,
+            repeat: -1,
+            onRepeat() {
+                updateMedia(this.targets()[0])
+            }
+        }
+    })
 
-  // Second timeline for opacity and blur
-  tl.to(medias, {
-      keyframes: [
-          {
-              opacity: 0,
-              filter: "blur(40px)",
-              duration: 0,
-              ease: "none"
-          },
-          {
-              opacity: 1,
-              filter: "blur(0px)",
-              duration: 1,
-              ease: "power2.in"
-          },
-          {
-              filter: "blur(0px)",
-              duration: 10,
-              ease: "none"
-          },
-          {
-              filter: "blur(40px)",
-              opacity: 0,
-              duration: 1,
-              ease: "power2.out"
-          }
-      ],
-      stagger: {
-          each: 1,
-          repeat: -1
-      }
-  }, '<') // Run in parallel with the z-position animation
+    // Second timeline for opacity and blur
+    tl.to(medias, {
+        keyframes: [
+            {
+                opacity: 0,
+                filter: "blur(40px)",
+                duration: 0,
+                ease: "none"
+            },
+            {
+                opacity: 1,
+                filter: "blur(0px)",
+                duration: 1,
+                ease: "power2.in"
+            },
+            {
+                filter: "blur(0px)",
+                duration: 10,
+                ease: "none"
+            },
+            {
+                filter: "blur(40px)",
+                opacity: 0,
+                duration: 1,
+                ease: "power2.out"
+            }
+        ],
+        stagger: {
+            each: 1,
+            repeat: -1
+        }
+    }, '<') // Run in parallel with the z-position animation
 
-  gsap.ticker.add(tick)
-  window.addEventListener("wheel", handleWheel, {passive: true});
-  root.addEventListener("mousemove", e => {
-      const valY = (e.clientX / window.innerWidth - 0.5) * 10
-      const valX = (e.clientY / window.innerHeight - 0.5) * 10
+    if (typeof window !== 'undefined') {
+      gsap.ticker.add(tick)
+      window.addEventListener("wheel", handleWheel, {passive: true});
+    }
+    if (root) {
+      root.addEventListener("mousemove", e => {
+        const valY = (e.clientX / window.innerWidth - 0.5) * 10
+        const valX = (e.clientY / window.innerHeight - 0.5) * 10
 
-      rotY(valY)
-      rotX(-valX)
-  })
+        rotY(valY)
+        rotX(-valX)
+      })
+    }
+  }
 
-  const isMobile = window.innerWidth <= 768;
-  if (isMobile) {
-    // Use scale/opacity/translateY animation for .media
-  } else {
-    // Use 3D translateZ animation
+  // Initial class set
+  if (root) {
+    if (isMobile.value) {
+      root.classList.add('mobile')
+      root.classList.remove('desktop')
+    } else {
+      root.classList.remove('mobile')
+      root.classList.add('desktop')
+    }
   }
 })
 
 onUnmounted(() => {
-  document.body.classList.remove('has-home-scroll')
-  document.body.classList.remove('no-smooth')
+  if (typeof window !== 'undefined') {
+    window.removeEventListener('resize', handleResize);
+  }
+  if (typeof document !== 'undefined') {
+    document.body.classList.remove('has-home-scroll')
+    document.body.classList.remove('no-smooth')
+  }
 })
+
+watch(isMobile, (newVal) => {
+  if (typeof document === 'undefined') return;
+  const root = document.querySelector('.home--container');
+  if (!root) return;
+  if (newVal) {
+    root.classList.add('mobile');
+    root.classList.remove('desktop');
+  } else {
+    root.classList.remove('mobile');
+    root.classList.add('desktop');
+  }
+});
 
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -295,6 +338,7 @@ body.has-home-scroll .back-to-top {
   z-index: 2;
 }
 
+
 .home--container .media-link {
   text-decoration: none;
   color: inherit;
@@ -357,4 +401,65 @@ body.has-home-scroll .back-to-top {
     pointer-events: all;
   }
 }
+
+
+
+
+
+
+.home--container.mobile .media {
+  transform: none !important;
+  position: relative;
+  width: 100%;
+}
+
+
+.home--container.mobile {
+  perspective: unset;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 5vw;
+}
+.home--container.mobile .container {
+  height: 100vw;
+  transform-style: preserve-3d;
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 3vw;
+  grid-template-rows: repeat(6, 1fr);
+  justify-content: end;
+  align-content: center;
+  max-width: 100vh;
+}
+.home--container.mobile .media img {
+  aspect-ratio: 1 / .95;
+  object-fit: contain;
+}
+
+.home--container.mobile .media {
+  grid-column: span 2;
+  grid-row: span 2;
+  filter: blur(0px) !important;
+  opacity: 1 !important;
+}
+
+.home--container.mobile .media:nth-child(1) { grid-column: 1 / 3; grid-row: 1 / 1; }
+.home--container.mobile .media:nth-child(2) { grid-column: 3 / 5; grid-row: 1 / 2; }
+.home--container.mobile .media:nth-child(3) { grid-column: 5 / 7; grid-row: 1 / 2; }
+.home--container.mobile .media:nth-child(4) { grid-column: 1 / 3; grid-row: 2 / 3; }
+.home--container.mobile .media:nth-child(5) { grid-column: 5 / 7; grid-row: 2 / 3; }
+.home--container.mobile .media:nth-child(6) { grid-column: 2 / 4; grid-row: 3 / 4; }
+.home--container.mobile .media:nth-child(7) { grid-column: 4 / 6; grid-row: 3 / 4; }
+
+.home--container.mobile .home--logo {
+  max-width: 21vw;
+  margin-top: -5vw;
+}
+
+
+
+
 </style> 
