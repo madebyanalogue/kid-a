@@ -273,13 +273,12 @@ body.has-home-scroll .back-to-top {
   top: 0;
   left: 0;
   width: 100%;
-  z-index: 100;
-  transform: translateZ(300vw);
 }
 .home--container .container {
   height: 100%;
   transform-style: preserve-3d;
   position: relative;
+  transform: translateZ(600vw);
 }
 
 .home--container .media {
