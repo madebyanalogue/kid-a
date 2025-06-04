@@ -170,6 +170,13 @@ onMounted(() => {
       rotY(valY)
       rotX(-valX)
   })
+
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    // Use scale/opacity/translateY animation for .media
+  } else {
+    // Use 3D translateZ animation
+  }
 })
 
 onUnmounted(() => {
@@ -278,14 +285,13 @@ body.has-home-scroll .back-to-top {
   height: 100%;
   transform-style: preserve-3d;
   position: relative;
-  transform: translateZ(600vw);
 }
 
 .home--container .media {
   width: 24%;
   height: auto;
   position: absolute;
-  transform: translateZ(-300vw);
+  transform: translateZ(-200vw);
   z-index: 2;
 }
 
@@ -300,7 +306,7 @@ body.has-home-scroll .back-to-top {
 
 .home--container .media-title {
   margin-top: calc(var(--unit) * 1);
-  font-size: calc(var(--unit) * 2);
+  font-size: calc(var(--unit) * 1);
   text-align: center;
   color: #fff;
   font-weight: 500;
