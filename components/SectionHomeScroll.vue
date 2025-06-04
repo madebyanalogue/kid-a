@@ -18,7 +18,6 @@
             <NuxtImg
               :src="getImageUrl(item.image)"
               :alt="item.title"
-              loading="lazy"
             />
             <h3 class="media-title">{{ item.title }}</h3>
           </NuxtLink>
@@ -32,7 +31,6 @@
             <NuxtImg
               :src="getImageUrl(item.image)"
               :alt="item.title"
-              loading="lazy"
             />
             <h3 class="media-title">{{ item.title }}</h3>
           </a>
@@ -263,7 +261,7 @@ body.has-home-scroll .back-to-top {
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: 100;
+  z-index: 1;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -282,6 +280,7 @@ body.has-home-scroll .back-to-top {
 .home--container .container {
   height: 100%;
   transform-style: preserve-3d;
+  position: relative;
 }
 
 .home--container .media {
@@ -289,12 +288,16 @@ body.has-home-scroll .back-to-top {
   height: auto;
   position: absolute;
   transform: translateZ(-300vw);
+  z-index: 2;
 }
 
 .home--container .media-link {
   text-decoration: none;
   color: inherit;
   display: block;
+  position: relative;
+  z-index: 2;
+  pointer-events: auto;
 }
 
 .home--container .media-title {
@@ -342,6 +345,12 @@ body.has-home-scroll .back-to-top {
 @media (max-width: 768px) {
   .home--container .media {
     width: 40%;
+    z-index: 2;
+  }
+  
+  .home--container .media-link {
+    z-index: 2;
+    pointer-events: auto;
   }
 }
 </style> 
