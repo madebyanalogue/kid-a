@@ -7,7 +7,7 @@
       </div>
     </div>
     <NuxtLink
-      v-if="!isHome || menuOpen"
+      v-if="!page?.hideHeaderLogo || menuOpen"
       to="/"
       class="logo-center"
       :style="{ zIndex: menuOpen ? 1003 : 1, position: 'relative' }"
@@ -19,7 +19,7 @@
     </NuxtLink>
     <div v-else class="logo-center" :style="{ zIndex: 1, position: 'relative' }">
       <div class="logo">
-        <Logo />
+        <!-- Empty div to maintain layout when logo is hidden -->
       </div>
     </div>
     <div class="header-right flex flex-row flex-center">
@@ -102,12 +102,25 @@ import Logo from '~/components/Logo.vue';
 import { NuxtImg } from '#components'
 import imageUrlBuilder from '@sanity/image-url'
 import { useMenu } from '~/composables/useMenu';
+import { usePageSettings } from '~/composables/usePageSettings';
 
 // Sanity image URL builder
 const builder = imageUrlBuilder({ projectId: '8n513ygd', dataset: 'production' })
 const $urlFor = (source) => builder.image(source)
 
 let darkTimeout = null;
+
+// Get page settings
+const { page } = usePageSettings();
+
+// Debug log for page settings
+watch(() => page.value, (newPage) => {
+  console.log('[Header] Page settings:', {
+    title: newPage?.title,
+    hideHeaderLogo: newPage?.hideHeaderLogo,
+    fullPageData: newPage
+  });
+}, { immediate: true });
 
 // Fetch main menu from Sanity (same as Footer)
 const { mainMenu } = useMenu();

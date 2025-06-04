@@ -28,6 +28,8 @@ interface Page {
   sections?: Section[]
   darkMode?: boolean
   headerPadding?: boolean
+  hideFooter?: boolean
+  hideHeaderLogo?: boolean
 }
 
 export default defineEventHandler(async (event) => {
@@ -91,6 +93,7 @@ export default defineEventHandler(async (event) => {
           darkMode,
           headerPadding,
           hideFooter,
+          hideHeaderLogo,
           sections[]-> {
             _id,
             _type,
