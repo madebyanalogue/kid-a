@@ -134,7 +134,6 @@ html, body {
 
 /* Prevent layout shift during hydration */
 main {
-  min-height: 100vh;
   transition: padding-top 0.3s ease;
 }
 

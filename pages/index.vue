@@ -1,6 +1,6 @@
 <template>
   <div>
-    <pre v-if="isDev" style="display: none">{{ JSON.stringify({ pageData, error }, null, 2) }}</pre>
+    <pre v-if="isDev" style="display: none">{{ JSON.stringify({ pageData, error, pending }, null, 2) }}</pre>
     <template v-if="error">
       <div class="wrapper py6">
         <h1>Error</h1>
@@ -8,12 +8,19 @@
         <p v-if="isDev">Status: {{ error.statusCode }}</p>
       </div>
     </template>
+    <template v-else-if="pending">
+      <div class="wrapper py6">
+        <div class="loading-placeholder">
+          <div class="loading-spinner"></div>
+        </div>
+      </div>
+    </template>
     <template v-else-if="pageData?.sections?.length">
       <PageBuilder :sections="pageData.sections" />
     </template>
-    <template v-else>
+    <template v-else-if="pageData">
       <div class="wrapper py6">
-        <h1>{{ pageData?.title || 'Home' }}</h1>
+        <h1>{{ pageData.title || 'Home' }}</h1>
         <p>This page is being prepared. Please check back soon!</p>
         <p v-if="isDev">Debug: No sections found</p>
       </div>
@@ -36,7 +43,7 @@ const config = useRuntimeConfig()
 const route = useRoute()
 
 // Use the same data fetching approach as [...slug].vue
-const { data: pageData, error } = await useAsyncData(
+const { data: pageData, error, pending } = await useAsyncData(
   () => `page-${route.path.replace(/^\//, '') || 'index'}`, // Use the same key format as usePageSettings
   async () => {
     try {
@@ -116,5 +123,27 @@ const isDev = computed(() => config.public.dev)
 </script>
 
 <style scoped>
-/* Add any page-specific styles here */
+.loading-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 200px;
+  gap: 1rem;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--gray-200);
+  border-top-color: var(--black);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
 </style> 

@@ -103,7 +103,7 @@ body { font-size: var(--body); }
 .rte h6 { font-size: var(--h8); line-height: 1.4; }
 
 :root {
-  --unit: 14px;
+  --unit: 3vw;
   --unit-reference: 1600;
   --h1: calc((48 / (var(--unit-reference) / 100)) * var(--unit));
   --h2: calc((42 / (var(--unit-reference) / 100)) * var(--unit));

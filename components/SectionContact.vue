@@ -5,7 +5,7 @@
         <div v-if="section.contactContent?.content" class="whitespace-pre-line" v-html="formatContent(section.contactContent.content)"></div>
       </div>
       <div>
-        <div class="grid grid-xs-1 grid-sm-2">
+        <div class="grid grid-1 grid-sm-2">
           <NuxtImg
             v-if="section.contactContent?.ftCreditLogo?.asset?.url"
             :src="section.contactContent.ftCreditLogo.asset.url"
@@ -73,7 +73,14 @@ const formatContent = (content) => {
 
 <style scoped>
 .whitespace-pre-line {
-  white-space: pre-line;
+  white-space: pre;
+}
+
+
+@media all and (max-width: 1023px) {
+  a {
+    font-size: 3.9vw;
+  }
 }
 
 :deep(.link) {
