@@ -291,9 +291,6 @@ body.has-home-scroll .back-to-top {
 </style>
 
 <style scoped>
-.home-scroll-section {
-}
-
 /* When this section is present, these styles will affect the parent elements */
 :global(.home-scroll-section ~ main) {
   min-height: unset;
@@ -403,9 +400,11 @@ body.has-home-scroll .back-to-top {
 }
 
 
+.home--container.mobile .media .media-title {
+  opacity: 0;
+}
 
-
-
+/* 
 
 .home--container.mobile .media {
   transform: none !important;
@@ -457,7 +456,7 @@ body.has-home-scroll .back-to-top {
 .home--container.mobile .home--logo {
   max-width: 21vw;
   margin-top: -5vw;
-}
+} */
 
 
 
