@@ -129,7 +129,7 @@ onMounted(() => {
       paused: true
   })
 
-  if (!isMobile.value) {
+ 
     // First timeline for z-position movement
     tl.to(medias, {
         z: 0,
@@ -190,7 +190,6 @@ onMounted(() => {
         rotX(-valX)
       })
     }
-  }
 
   // Initial class set
   if (root) {
