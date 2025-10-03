@@ -113,6 +113,12 @@ useHead({
 // Log initial state for debugging
 onMounted(() => {
   // Component mounted, no need for logging
+  if (typeof document !== 'undefined') {
+    document.body.classList.add('page-in')
+    setTimeout(() => {
+      document.body.classList.remove('page-in')
+    }, 400)
+  }
 })
 </script>
 
@@ -120,6 +126,11 @@ onMounted(() => {
 /* Add to your global styles */
 html {
   background-color: var(--initial-bg);
+}
+
+/* Provide a safe default header height to avoid initial layout jump before JS measures */
+:root {
+  --header-height: 80px;
 }
 
 html.dark-mode {
@@ -135,6 +146,42 @@ html, body {
 /* Prevent layout shift during hydration */
 main {
   transition: padding-top 0.3s ease;
+}
+
+/* Smooth page transitions to avoid footer pop-in */
+body.page-out main {
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  min-height: 100vh; /* reserve viewport height to keep footer below fold */
+}
+body.page-in main {
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+/* Hide footer during navigation; fade it in after page content */
+body.page-out footer {
+  opacity: 0;
+  pointer-events: none;
+}
+body.page-in footer:not(.force-hide) {
+  opacity: 1;
+  transition: opacity 0.35s ease;
+}
+
+/* Hide footer fully while a page is loading to prevent flash at top */
+body.page-loading footer {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+/* Hide content until route finished and layout calculated */
+body.page-loading main {
+  opacity: 0 !important;
+  visibility: hidden;
+}
+body.page-in main {
+  visibility: visible;
 }
 
 /* Hide footer on home page */

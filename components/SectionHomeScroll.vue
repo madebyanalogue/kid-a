@@ -129,6 +129,12 @@ onMounted(() => {
       paused: true
   })
 
+  // Only on desktop: manage clickability/stacking so only the visible media is clickable
+  const managePointerAndZIndex = !isMobile.value
+  if (managePointerAndZIndex) {
+    gsap.set(medias, { pointerEvents: 'none', zIndex: 1 })
+  }
+
  
     // First timeline for z-position movement
     tl.to(medias, {
@@ -146,7 +152,39 @@ onMounted(() => {
 
     // Second timeline for opacity and blur
     tl.to(medias, {
-        keyframes: [
+        keyframes: managePointerAndZIndex ? [
+            {
+                opacity: 0,
+                filter: "blur(40px)",
+                duration: 0,
+                ease: "none",
+                pointerEvents: 'none',
+                zIndex: 1
+            },
+            {
+                opacity: 1,
+                filter: "blur(0px)",
+                duration: 1,
+                ease: "power2.in",
+                pointerEvents: 'auto',
+                zIndex: 1000
+            },
+            {
+                filter: "blur(0px)",
+                duration: 10,
+                ease: "none",
+                pointerEvents: 'auto',
+                zIndex: 1000
+            },
+            {
+                filter: "blur(40px)",
+                opacity: 0,
+                duration: 1,
+                ease: "power2.out",
+                pointerEvents: 'none',
+                zIndex: 1
+            }
+        ] : [
             {
                 opacity: 0,
                 filter: "blur(40px)",
