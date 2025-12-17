@@ -129,10 +129,10 @@ onMounted(() => {
       paused: true
   })
 
-  // Only on desktop: manage clickability/stacking so only the visible media is clickable
-  const managePointerAndZIndex = !isMobile.value
-  if (managePointerAndZIndex) {
-    gsap.set(medias, { pointerEvents: 'none', zIndex: 1 })
+  // On desktop: use zIndex to bring visible items to top (clickable)
+  const manageZIndex = !isMobile.value
+  if (manageZIndex) {
+    gsap.set(medias, { zIndex: 1 })
   }
 
  
@@ -152,13 +152,12 @@ onMounted(() => {
 
     // Second timeline for opacity and blur
     tl.to(medias, {
-        keyframes: managePointerAndZIndex ? [
+        keyframes: manageZIndex ? [
             {
                 opacity: 0,
                 filter: "blur(40px)",
                 duration: 0,
                 ease: "none",
-                pointerEvents: 'none',
                 zIndex: 1
             },
             {
@@ -166,14 +165,12 @@ onMounted(() => {
                 filter: "blur(0px)",
                 duration: 1,
                 ease: "power2.in",
-                pointerEvents: 'auto',
                 zIndex: 1000
             },
             {
                 filter: "blur(0px)",
                 duration: 10,
                 ease: "none",
-                pointerEvents: 'auto',
                 zIndex: 1000
             },
             {
@@ -181,7 +178,6 @@ onMounted(() => {
                 opacity: 0,
                 duration: 1,
                 ease: "power2.out",
-                pointerEvents: 'none',
                 zIndex: 1
             }
         ] : [
@@ -238,6 +234,10 @@ onMounted(() => {
       root.classList.remove('mobile')
       root.classList.add('desktop')
     }
+    // Mark ready after GSAP has positioned items
+    requestAnimationFrame(() => {
+      root.classList.add('ready')
+    })
   }
 })
 
@@ -362,6 +362,7 @@ body.has-home-scroll .back-to-top {
   height: 100%;
   transform-style: preserve-3d;
   position: relative;
+  pointer-events: none;
 }
 
 .home--container .media {
@@ -370,6 +371,11 @@ body.has-home-scroll .back-to-top {
   position: absolute;
   transform: translateZ(-200vw);
   z-index: 2;
+  pointer-events: auto;
+  opacity: 0; /* hidden until GSAP positions them */
+}
+.home--container.ready .media {
+  opacity: 1;
 }
 
 
@@ -379,7 +385,8 @@ body.has-home-scroll .back-to-top {
   display: block;
   position: relative;
   z-index: 2;
-  pointer-events: auto;
+  pointer-events: auto !important;
+  cursor: pointer;
 }
 
 .home--container .media-title {
