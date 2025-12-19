@@ -86,6 +86,7 @@ export default defineEventHandler(async (event) => {
       let result: Page | null
       
       if (query.identifierType === 'slug') {
+        // First, let's try to find the page with the exact slug
         const queryString = `*[_type == "page" && slug.current == $identifier][0] {
           _id,
           title,
@@ -300,7 +301,7 @@ export default defineEventHandler(async (event) => {
                 }
               },
               content
-            }
+            },
           }
         }`
         
@@ -317,10 +318,19 @@ export default defineEventHandler(async (event) => {
           
           // Log the result or lack thereof
           if (!result) {
-            console.error('[Server API] No page found for slug:', query.identifier)
+            // Try to find all pages to help debug
+            const allPages = await client.fetch(`*[_type == "page"] { _id, title, slug }`)
+            console.error('[Server API] No page found for slug:', {
+              requestedSlug: query.identifier,
+              availablePages: allPages?.map((p: any) => ({
+                id: p._id,
+                title: p.title,
+                slug: p.slug?.current || 'NO SLUG'
+              })) || []
+            })
             throw createError({
               statusCode: 404,
-              message: `Page not found: ${query.identifier}`
+              message: `Page not found: ${query.identifier}. Available pages: ${allPages?.map((p: any) => p.slug?.current || 'NO SLUG').join(', ') || 'none'}`
             })
           }
 
@@ -448,6 +458,25 @@ export default defineEventHandler(async (event) => {
             _id,
             url,
             metadata { dimensions }
+          }
+        }
+      }`)
+      return result
+    }
+    
+    if (query.type === 'downloads') {
+      const result = await client.fetch(`*[_type == "downloads"] | order(orderRank asc) {
+        _id,
+        title,
+        filetype,
+        dateAdded,
+        orderRank,
+        fileList,
+        file {
+          asset-> {
+            _id,
+            url,
+            originalFilename
           }
         }
       }`)

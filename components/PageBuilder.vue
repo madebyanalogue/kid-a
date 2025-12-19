@@ -73,6 +73,12 @@
       <!-- Press Section -->
       <SectionPress v-else-if="section._type === 'section' && section.sectionType === 'press'" :section="section" />
 
+      <!-- Downloads Section -->
+      <SectionDownloads 
+        v-else-if="section._type === 'section' && section.sectionType === 'downloads'" 
+        :section="section" 
+      />
+
       <!-- Fallback for empty or misconfigured Home Scroll Section -->
       <div
         v-else-if="section._type === 'section' && section.sectionType === 'homeScroll'"
@@ -140,6 +146,15 @@ watch(() => props.sections, (newSections) => {
         hasPlaylistContent: !!section.playlistContent,
         playlistContent: section.playlistContent,
         tracks: section.playlistContent?.playlist?.tracks
+      })
+    }
+    
+    // Check downloads section
+    if (section.sectionType === 'downloads') {
+      console.log('Downloads Section Content:', {
+        _type: section._type,
+        sectionType: section.sectionType,
+        matchesCondition: section._type === 'section' && section.sectionType === 'downloads'
       })
     }
   })

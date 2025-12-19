@@ -40,8 +40,19 @@ const props = defineProps({
   }
 })
 
-// Convert line breaks to <br/> with null check
-const formattedHeadline = computed(() =>
-  (props.section?.headlineContent?.headline || '').replace(/\\n/g, '<br/>')
-)
+// Convert newlines to paragraph breaks
+const formattedHeadline = computed(() => {
+  const headline = props.section?.headlineContent?.headline || ''
+  if (!headline) return ''
+  
+  // Split by newlines (handles both \n and actual newlines)
+  // Filter out empty strings from multiple consecutive newlines
+  const lines = headline
+    .replace(/\\n/g, '\n') // Convert escaped newlines to actual newlines
+    .split(/\n+/)
+    .filter(line => line.trim().length > 0)
+  
+  // Wrap each line in a paragraph tag
+  return lines.map(line => `<p>${line.trim()}</p>`).join('')
+})
 </script>

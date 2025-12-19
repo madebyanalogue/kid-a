@@ -106,7 +106,7 @@ function setTextContentRef(el, index) {
   if (el) textContentRefs.value[index] = el;
 }
 
-const startAnimation = (svgDoc) => {
+const startAnimation = (svgDoc, startImmediately = false) => {
   try {
     if (!svgDoc) return;
     const gElements = Array.from(svgDoc.querySelectorAll('g'));
@@ -126,28 +126,37 @@ const startAnimation = (svgDoc) => {
     gElements.forEach(g => {
       g.style.opacity = '0';
     });
-    // Create animation sequence
-    let currentIndex = 0;
+    
     const delay = 400;
-    const totalDuration = (gElements.length + 1) * delay;
-    const animate = () => {
-      if (currentIndex < gElements.length) {
-        gElements[currentIndex].style.opacity = '1';
-        currentIndex++;
-        setTimeout(animate, delay);
-      } else {
-        // Wait for final delay before resetting
-        setTimeout(() => {
-          gElements.forEach(g => {
-            g.style.opacity = '0';
-          });
-          currentIndex = 0;
-          setTimeout(animate, delay);
-        }, delay);
-      }
-    };
-    // Start animation
-    animate();
+    
+    // Schedule all animations upfront for perfect synchronization
+    const timers = [];
+    
+    // Schedule each group to appear
+    gElements.forEach((g, index) => {
+      timers.push(setTimeout(() => {
+        g.style.opacity = '1';
+      }, index * delay));
+    });
+    
+    // Schedule reset and restart
+    const resetTimer = setTimeout(() => {
+      gElements.forEach(g => {
+        g.style.opacity = '0';
+      });
+      // Restart the cycle
+      setTimeout(() => {
+        startAnimation(svgDoc, startImmediately);
+      }, delay);
+    }, gElements.length * delay);
+    
+    timers.push(resetTimer);
+    
+    // Store timers for cleanup if needed
+    if (!svgDoc._animationTimers) {
+      svgDoc._animationTimers = [];
+    }
+    svgDoc._animationTimers.push(...timers);
   } catch (error) {
     // Silent error handling
   }
@@ -196,28 +205,75 @@ onMounted(() => {
       }
     });
 
-    // Initialize SVG animations
+    // Initialize SVG animations - start all at the same time
+    const svgDocs = [];
     textContentRefs.value.forEach((container) => {
       if (container?.innerHTML?.includes('<svg')) {
         const svg = container.querySelector('svg');
         if (svg) {
-          startAnimation(svg.ownerDocument || svg);
+          svgDocs.push(svg.ownerDocument || svg);
         }
       }
     });
+    // Start all SVG animations simultaneously with shared timers
+    if (svgDocs.length > 1) {
+      // Find the maximum number of groups across all SVGs
+      let maxGroups = 0;
+      svgDocs.forEach(svgDoc => {
+        const gElements = Array.from(svgDoc.querySelectorAll('g'));
+        if (gElements.length > maxGroups) {
+          maxGroups = gElements.length;
+        }
+      });
+      
+      // Create shared timers array
+      const sharedTimers = new Array(maxGroups);
+      
+      // Start all animations with the same timers
+      svgDocs.forEach(svgDoc => {
+        startAnimation(svgDoc, sharedTimers);
+      });
+    } else if (svgDocs.length === 1) {
+      // Single SVG, no synchronization needed
+      startAnimation(svgDocs[0]);
+    }
   });
 });
 
 onUpdated(() => {
   nextTick(() => {
+    // Initialize SVG animations - start all at the same time
+    const svgDocs = [];
     textContentRefs.value.forEach((container) => {
       if (container?.innerHTML?.includes('<svg')) {
         const svg = container.querySelector('svg');
         if (svg) {
-          startAnimation(svg.ownerDocument || svg);
+          svgDocs.push(svg.ownerDocument || svg);
         }
       }
     });
+    // Start all SVG animations simultaneously with shared timers
+    if (svgDocs.length > 1) {
+      // Find the maximum number of groups across all SVGs
+      let maxGroups = 0;
+      svgDocs.forEach(svgDoc => {
+        const gElements = Array.from(svgDoc.querySelectorAll('g'));
+        if (gElements.length > maxGroups) {
+          maxGroups = gElements.length;
+        }
+      });
+      
+      // Create shared timers array
+      const sharedTimers = new Array(maxGroups);
+      
+      // Start all animations with the same timers
+      svgDocs.forEach(svgDoc => {
+        startAnimation(svgDoc, sharedTimers);
+      });
+    } else if (svgDocs.length === 1) {
+      // Single SVG, no synchronization needed
+      startAnimation(svgDocs[0]);
+    }
   });
 });
 </script>
