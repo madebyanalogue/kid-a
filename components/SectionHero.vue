@@ -288,8 +288,6 @@ onUpdated(() => {
 .draggable--container {
   position: relative;
   width: 100%;
-  height: 0;
-  padding-bottom: 100%; /* Default aspect ratio, will be overridden by dynamic style */
 }
 
 .hero--element {
