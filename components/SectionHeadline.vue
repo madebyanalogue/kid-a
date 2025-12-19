@@ -1,7 +1,7 @@
 <template>
   <section v-if="section?.headlineContent">
     <div class="wrapper">
-      <div class="py6">
+      <div :class="`py${section.headlineContent.padding || 6}`">
         <div
           class="grid"
           :class="{

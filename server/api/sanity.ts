@@ -177,6 +177,7 @@ export default defineEventHandler(async (event) => {
               headline,
               centerText,
               centerBlock,
+              padding,
               button {
                 text,
                 url
