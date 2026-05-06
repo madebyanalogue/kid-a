@@ -154,12 +154,10 @@
             :alt="`Footer logo ${i + 1}`"
             class="h-[calc(var(--pad-3)*1)] w-auto object-contain"
             width="auto"
-            height="auto"
             loading="lazy"
+            height="auto"
           />
         </div>
-
-
       </div>
     </div>
   </footer>
