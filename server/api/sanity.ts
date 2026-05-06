@@ -41,6 +41,21 @@ export default defineEventHandler(async (event) => {
         const result = await client.fetch(`
           *[_type == "siteSettings"][0] {
             ...,
+            footerMenu-> {
+              _id,
+              title,
+              items[] {
+                ...,
+                to {
+                  ...,
+                  page-> {
+                    _id,
+                    slug,
+                    title
+                  }
+                }
+              }
+            },
             footerLogos[] {
               ...,
               asset->

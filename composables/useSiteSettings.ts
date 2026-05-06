@@ -18,6 +18,7 @@ export const useSiteSettings = () => {
     }),
     certificationLogo: computed(() => settings.value?.certificationLogo?.asset?.url),
     ftCreditLogo: computed(() => settings.value?.ftCreditLogo?.asset?.url),
-    linkedinUrl: computed(() => settings.value?.linkedinUrl)
+    linkedinUrl: computed(() => settings.value?.linkedinUrl),
+    footerMenuItems: computed(() => settings.value?.footerMenu?.items || [])
   }
 } 

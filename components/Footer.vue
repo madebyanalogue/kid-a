@@ -54,11 +54,11 @@
           </div>
           <div class="">
             <ul class="circle--active circle--hover uppercase">
-              <li v-if="footerMenuPending" class="menu-status">
+              <li v-if="siteSettingsPending" class="menu-status">
                 Loading footer menu...
               </li>
-              <li v-else-if="footerMenuError" class="menu-status">
-                Error loading footer menu: {{ footerMenuError.message }}
+              <li v-else-if="siteSettingsError" class="menu-status">
+                Error loading footer menu: {{ siteSettingsError.message }}
               </li>
               <template v-else>
                 <li 
@@ -84,7 +84,7 @@
                   <span v-else class="menu-text">{{ item.text }}</span>
                 </li>
                 <li v-if="!footerMenuItems.length" class="menu-status">
-                  No footer menu items found.
+                  
                 </li>
               </template>
             </ul>
@@ -182,21 +182,20 @@ const {
   footerLogos: logos, 
   certificationLogo, 
   ftCreditLogo,
-  linkedinUrl 
+  linkedinUrl,
+  footerMenuItems,
+  pending: siteSettingsPending,
+  error: siteSettingsError
 } = useSiteSettings();
 
 const { 
   mainMenu, 
-  footerMenu, 
   mainMenuPending, 
-  footerMenuPending, 
-  mainMenuError, 
-  footerMenuError 
+  mainMenuError
 } = useMenu();
 
 // Computed properties for menu items
 const mainMenuItems = computed(() => mainMenu?.value?.items || []);
-const footerMenuItems = computed(() => footerMenu?.value?.items || []);
 </script>
 
 <style scoped>
