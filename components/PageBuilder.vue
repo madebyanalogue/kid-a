@@ -79,6 +79,12 @@
         :section="section" 
       />
 
+      <!-- Subsections Section -->
+      <SectionSubsections
+        v-else-if="section._type === 'section' && section.sectionType === 'subsections'"
+        :section="section"
+      />
+
       <!-- Fallback for empty or misconfigured Home Scroll Section -->
       <div
         v-else-if="section._type === 'section' && section.sectionType === 'homeScroll'"

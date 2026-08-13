@@ -32,6 +32,33 @@ interface Page {
   hideHeaderLogo?: boolean
 }
 
+function slugify(value: string): string {
+  return value
+    .toLowerCase()
+    .trim()
+    .replace(/['"]/g, '')
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+async function resolvePageSlug(identifier: string): Promise<string | null> {
+  const exactMatch = await client.fetch<string | null>(
+    `*[_type == "page" && slug.current == $identifier][0].slug.current`,
+    { identifier }
+  )
+  if (exactMatch) return exactMatch
+
+  const pages = await client.fetch<Array<{ slug?: { current?: string } }>>(
+    `*[_type == "page"] { slug }`
+  )
+  const normalizedIdentifier = slugify(identifier)
+  const matchedPage = pages.find(
+    (page) => slugify(page.slug?.current || '') === normalizedIdentifier
+  )
+
+  return matchedPage?.slug?.current || null
+}
+
 export default defineEventHandler(async (event) => {
   const query = getQuery(event)
   
@@ -318,87 +345,46 @@ export default defineEventHandler(async (event) => {
               },
               content
             },
+            subsectionsContent {
+              subsections[] {
+                _key,
+                "title": coalesce(title, subtitle),
+                layout,
+                coverHeaderPadding,
+                image {
+                  asset-> {
+                    _id,
+                    url,
+                    metadata {
+                      dimensions
+                    }
+                  },
+                  alt
+                },
+                intro,
+                items[] {
+                  _key,
+                  itemType,
+                  title,
+                  content
+                }
+              }
+            },
           }
         }`
         
-        try {
-          // Add detailed logging for the query parameters
-          console.error('[Server API] Page query details:', {
-            identifier: query.identifier,
-            identifierType: query.identifierType,
-            queryString,
-            timestamp: new Date().toISOString()
-          })
-
-          result = await client.fetch<Page>(queryString, { identifier: query.identifier })
-          
-          // Log the result or lack thereof
-          if (!result) {
-            // Try to find all pages to help debug
-            const allPages = await client.fetch(`*[_type == "page"] { _id, title, slug }`)
-            console.error('[Server API] No page found for slug:', {
-              requestedSlug: query.identifier,
-              availablePages: allPages?.map((p: any) => ({
-                id: p._id,
-                title: p.title,
-                slug: p.slug?.current || 'NO SLUG'
-              })) || []
-            })
-            throw createError({
-              statusCode: 404,
-              message: `Page not found: ${query.identifier}. Available pages: ${allPages?.map((p: any) => p.slug?.current || 'NO SLUG').join(', ') || 'none'}`
-            })
-          }
-
-          // Log successful result structure
-          console.error('[Server API] Page query successful:', {
-            id: result._id,
-            title: result.title,
-            hasSections: !!result.sections,
-            sectionsCount: result.sections?.length,
-            sectionTypes: result.sections?.map(s => s.sectionType),
-            playlistSections: result.sections
-              ?.filter(s => s.sectionType === 'featuredPlaylist')
-              .map(s => ({
-                _id: s._id,
-                hasPlaylistContent: !!s.playlistContent,
-                playlistContent: s.playlistContent,
-                tracksCount: s.playlistContent?.tracks?.length
-              }))
-          })
-
-        } catch (error) {
-          const fetchError = error as SanityError
-          console.error('[Server API] Error fetching page:', {
-            error: fetchError.message,
-            stack: fetchError.stack,
-            details: fetchError.details,
-            statusCode: fetchError.statusCode,
-            query: {
-              identifier: query.identifier,
-              type: query.type,
-              identifierType: query.identifierType
-            }
-          })
+        const resolvedSlug = await resolvePageSlug(String(query.identifier))
+        if (!resolvedSlug) {
           throw createError({
-            statusCode: fetchError.statusCode || 500,
-            message: `Error fetching page: ${fetchError.message}`
+            statusCode: 404,
+            message: `Page not found: ${query.identifier}`
           })
         }
+
+        result = await client.fetch<Page>(queryString, { identifier: resolvedSlug })
       } else {
-        const queryString = '*[_type == "page" && routeName == $identifier][0]'
-        try {
-          result = await client.fetch<Page>(queryString, { identifier: query.identifier })
-        } catch (error) {
-          const fetchError = error as SanityError
-          console.error('[Server API] Error fetching page by route name:', {
-            error: fetchError.message,
-            stack: fetchError.stack,
-            details: fetchError.details,
-            statusCode: fetchError.statusCode
-          })
-          throw fetchError
-        }
+        const routeQuery = '*[_type == "page" && routeName == $identifier][0]'
+        result = await client.fetch<Page>(routeQuery, { identifier: query.identifier })
       }
 
       if (!result) {
