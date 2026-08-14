@@ -297,7 +297,7 @@ function getContactIconType(item) {
 
 <style scoped>
 section {
-  --content-indent: 40px;
+  --content-indent: 50px;
   font-size: clamp(18px, 2vw, 22px);
 }
 
@@ -387,6 +387,11 @@ section :deep(p:last-child) {
 .faq-answer,
 .contact-value {
   font-weight: 400;
+}
+
+.faq-answer {
+  background:#f7f7f7;
+  color:#222;
 }
 
 .faq-item {
@@ -522,12 +527,16 @@ section :deep(p:last-child) {
   position: absolute;
   left: 0;
   top: 0.1em;
-  transform: translateX(-50%);
   width: 1.35em;
   height: 1.35em;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+@media (min-width: 1000px) {
+  .contact-icon {
+    transform: translateX(-50%);
+}
 }
 
 .contact-icon svg {
@@ -560,14 +569,4 @@ section :deep(p:last-child) {
   }
 }
 
-@media all and (max-width: 767px) {
-  .contact-item[data-v-79f26b38] {
-    position: relative;
-    padding-left: 60px;
-  }
-  .contact-icon[data-v-79f26b38] {
-    position: absolute;
-    left: 10px;
-  }
-}
 </style>
